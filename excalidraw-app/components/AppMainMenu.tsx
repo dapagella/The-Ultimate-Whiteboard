@@ -16,6 +16,7 @@ import {
   latexDialogAtom,
 } from "../tuw/content/contentState";
 import { SheetsTabIcon } from "../tuw/explorer/icons";
+import { exportDialogAtom } from "../tuw/export/exportState";
 import { penDialogOpenAtom } from "../tuw/pen/penState";
 import { isDesktop } from "../tuw/workspace/desktopApi";
 
@@ -67,6 +68,13 @@ export const AppMainMenu: React.FC<{
       <MainMenu.DefaultItems.SaveToActiveFile />
       <MainMenu.DefaultItems.Export />
       <MainMenu.DefaultItems.SaveAsImage />
+      {isDesktop() && (
+        <MainMenu.Item
+          onSelect={() => appJotaiStore.set(exportDialogAtom, { path: null })}
+        >
+          Exportar hoja…
+        </MainMenu.Item>
+      )}
       <MainMenu.Item
         onSelect={() => appJotaiStore.set(latexDialogAtom, { mode: "new" })}
       >

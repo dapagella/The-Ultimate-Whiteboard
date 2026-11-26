@@ -6,7 +6,7 @@ import { spawn } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const name = process.argv[2];
 if (!name) {
@@ -33,6 +33,9 @@ fs.writeFileSync(
   }),
 );
 
+const exportsDir = path.join(tmp, "exports");
+fs.mkdirSync(exportsDir);
+
 const out = await new Promise((resolve) => {
   const p = spawn(electronBin, [desktopDir], {
     env: {
@@ -40,6 +43,7 @@ const out = await new Promise((resolve) => {
       TUW_SELFTEST: "1",
       TUW_USER_DATA: path.join(tmp, "userdata"),
       TUW_WORKSPACE_DIR: ws,
+      TUW_EXPORT_DIR: exportsDir,
       TUW_SELFTEST_SCRIPT: path.join(desktopDir, "selftest", `${name}.e2e.js`),
     },
   });
@@ -52,6 +56,13 @@ const out = await new Promise((resolve) => {
     resolve(so);
   });
 });
+// revisión opcional de archivos generados: desktop/selftest/<nombre>.check.mjs
+const checkFile = path.join(desktopDir, "selftest", `${name}.check.mjs`);
+let fileProblems = [];
+if (fs.existsSync(checkFile)) {
+  const check = (await import(pathToFileURL(checkFile).href)).default;
+  fileProblems = check(exportsDir);
+}
 fs.rmSync(tmp, { recursive: true, force: true });
 
 const line = out.split("\n").find((l) => l.startsWith("TUW_SELFTEST_RESULT "));
@@ -76,6 +87,7 @@ if (!s || s.error) {
     }
   }
 }
+problems.push(...fileProblems);
 console.log(JSON.stringify(s, null, 2));
 if (problems.length) {
   console.error(`\nFALLÓ:\n - ${problems.join("\n - ")}`);

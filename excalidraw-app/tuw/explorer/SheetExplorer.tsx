@@ -4,6 +4,10 @@ import { Dialog } from "@excalidraw/excalidraw/components/Dialog";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
+import { appJotaiStore } from "../../app-jotai";
+
+import { exportDialogAtom } from "../export/exportState";
+
 import {
   ChevronIcon,
   FolderIcon,
@@ -21,6 +25,7 @@ import {
   validDestinations,
   validateMove,
 } from "./tree";
+
 import { useExplorer } from "./useExplorer";
 
 import "./explorer.scss";
@@ -319,6 +324,11 @@ export const SheetExplorer = () => {
       items.push({
         label: "Duplicar",
         onClick: () => void ex.duplicate(single.path),
+      });
+      items.push({
+        label: "Exportar hoja…",
+        onClick: () =>
+          appJotaiStore.set(exportDialogAtom, { path: single.path }),
       });
     }
     if (paths.length) {

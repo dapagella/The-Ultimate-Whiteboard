@@ -26,6 +26,7 @@ import {
   resolveAppFile,
 } from "./security";
 
+import { registerExportIpc } from "./exportFile";
 import { registerImageIpc } from "./imageFetch";
 import { ensureWorkspace, registerWorkspaceIpc } from "./workspaceService";
 
@@ -364,6 +365,7 @@ if (!app.requestSingleInstanceLock()) {
 
     registerWorkspaceIpc(() => mainWindow, DEV_URL);
     registerImageIpc(DEV_URL);
+    registerExportIpc(() => mainWindow, DEV_URL);
     // En el primer arranque pregunta dónde guardar (Q14); antes de abrir la ventana.
     await ensureWorkspace(null, process.env.TUW_WORKSPACE_DIR);
 

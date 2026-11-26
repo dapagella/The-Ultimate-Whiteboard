@@ -40,4 +40,13 @@ export type FetchedImage = {
   name: string;
 };
 
+/** Exportar hoja: `content` es texto (svg/json) o base64 (png). */
+export type ExportRequest = {
+  format: "png" | "svg" | "json";
+  suggestedName: string;
+  content: string;
+};
+
+export type ExportResult = { saved: false } | { saved: true; path: string };
+
 export type WorkspaceInfo = { root: string; lastSheet: string | null };

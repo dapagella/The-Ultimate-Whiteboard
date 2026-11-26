@@ -4,6 +4,8 @@
  * Todas las rutas son relativas al espacio de trabajo ("" = raíz, "/" como separador).
  */
 import type {
+  ExportRequest,
+  ExportResult,
   FetchedImage,
   Result,
   SheetVersion,
@@ -14,6 +16,8 @@ import type {
 } from "./workspace/types";
 
 export type {
+  ExportRequest,
+  ExportResult,
   FetchedImage,
   Result,
   SheetVersion,
@@ -66,6 +70,8 @@ export type TuwApi = {
   workspace: TuwWorkspaceApi;
   /** Descarga una imagen por URL (en el proceso principal, sin límites de CORS). */
   fetchImage: (url: string) => Promise<Result<FetchedImage>>;
+  /** Guarda un archivo exportado con el diálogo nativo de guardado (la persona elige dónde). */
+  saveExport: (req: ExportRequest) => Promise<Result<ExportResult>>;
   /**
    * Registra una función que la app ejecuta antes de cerrar la ventana
    * (para guardar lo pendiente). Devuelve cómo des-registrarla.
@@ -93,6 +99,7 @@ export const IPC_CHANNELS = {
     setLastSheet: "tuw:ws:set-last-sheet",
   },
   fetchImage: "tuw:fetch-image",
+  saveExport: "tuw:save-export",
   beforeClose: "tuw:before-close",
   beforeCloseRegister: "tuw:before-close-register",
   beforeCloseDone: "tuw:before-close-done",

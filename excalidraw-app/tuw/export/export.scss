@@ -1,0 +1,65 @@
+.excalidraw .tuw-export {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+
+  &__formats {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__radio,
+  &__check {
+    display: block;
+    cursor: pointer;
+  }
+
+  &__hint {
+    margin: 0;
+    font-size: 0.8rem;
+    opacity: 0.7;
+  }
+
+  &__msg {
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    word-break: break-all;
+
+    &.is-ok {
+      background: rgba(47, 158, 68, 0.14);
+    }
+
+    &.is-error {
+      background: rgba(224, 49, 49, 0.12);
+      color: #c92a2a;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+
+  &__btn {
+    padding: 8px 14px;
+    border: 1px solid var(--default-border-color, #ccc);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-primary-color);
+    cursor: pointer;
+
+    &:disabled {
+      cursor: default;
+      opacity: 0.5;
+    }
+
+    &--primary {
+      border-color: transparent;
+      background: var(--color-primary, #6965db);
+      color: #fff;
+    }
+  }
+}

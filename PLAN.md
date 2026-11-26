@@ -290,10 +290,12 @@ Convención: cada tarea es atómica; "Archivos" son los principales a tocar; el 
 - Pruebas: `penInput.test.ts` + `node desktop/scripts/selftest-run.mjs pen` (eventos `pen` simulados en la app real: presión, barril→goma, ajustes guardados). Nuevo runner genérico `desktop/scripts/selftest-run.mjs <nombre>`.
 - **Pendiente humano**: probar con una tableta Wacom/XP-Pen real (presión, palma, botones) y, si el botón no hace lo esperado, mirar "Detectar botón".
 
-### Fase 10 — Exportación de hoja
+### Fase 10 — Exportación de hoja ✅
 
-- [ ] 10.1 "Exportar hoja" en menú y menú contextual: PNG, SVG, JSON (diálogo nativo de guardado).
-- [ ] 10.2 Incluir fondo, multiply, LaTeX y nombre de hoja; JSON autocontenido. _Acepta_: el JSON exportado se reimporta (en TUW y en excalidraw.com) sin pérdida visible.
+- [x] 10.1 "Exportar hoja…" en el menú ☰ (la hoja abierta, con lo último dibujado) y en el menú contextual del explorador (cualquier hoja, leída del disco). Diálogo con formato PNG (1×/2×/3×) · SVG · `.excalidraw`, opción de fondo, y el **diálogo nativo de guardado** de Windows: la interfaz solo manda el contenido (`window.tuw.saveExport`), el proceso principal valida (tipo real por bytes, tamaño ≤300 MB, nombre seguro en Windows) y escribe donde la persona elige (`desktop/src/exportFile.ts`).
+- [x] 10.2 Incluye fondo de la hoja (color y cuadrícula/rayas/puntos), resaltador (multiply), fórmulas, imágenes y nombre de la hoja como nombre sugerido. PNG y SVG llevan la hoja embebida (se pueden reimportar). El `.excalidraw` es autocontenido (imágenes embebidas).
+- Pruebas: `desktop/tests/exportFile.test.ts` (7), `excalidraw-app/tuw/export/__tests__/exportSheet.test.ts` (ida y vuelta del JSON), y `node desktop/scripts/selftest-run.mjs export` en la app real (revisa los 3 archivos generados: PNG válido, SVG con fondo+fórmula, JSON autocontenido con fondo y fórmula).
+- Nota: abrir el `.excalidraw` en excalidraw.com no muestra el fondo cuadriculado de TUW (es una extensión nuestra), pero no se pierde nada más y al volver a abrirlo en TUW sí se conserva.
 
 ### Fase 11 — Instaladores y publicación en GitHub
 
