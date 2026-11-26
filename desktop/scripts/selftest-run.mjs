@@ -37,7 +37,9 @@ const exportsDir = path.join(tmp, "exports");
 fs.mkdirSync(exportsDir);
 
 const out = await new Promise((resolve) => {
-  const p = spawn(electronBin, [desktopDir], {
+  // TUW_EXE: probar el programa instalado/empaquetado en vez de electron + código fuente
+  const exe = process.env.TUW_EXE;
+  const p = spawn(exe || electronBin, exe ? [] : [desktopDir], {
     env: {
       ...process.env,
       TUW_SELFTEST: "1",

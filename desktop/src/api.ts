@@ -15,6 +15,8 @@ import type {
   WriteResult,
 } from "./workspace/types";
 
+import type { UpdateStatus } from "./updateState";
+
 export type {
   ExportRequest,
   ExportResult,
@@ -26,6 +28,8 @@ export type {
   WorkspaceInfo,
   WriteResult,
 };
+
+export type { UpdateStatus };
 
 export type TuwAppInfo = {
   name: string;
@@ -72,6 +76,13 @@ export type TuwApi = {
   fetchImage: (url: string) => Promise<Result<FetchedImage>>;
   /** Guarda un archivo exportado con el diálogo nativo de guardado (la persona elige dónde). */
   saveExport: (req: ExportRequest) => Promise<Result<ExportResult>>;
+  updater: {
+    getStatus: () => Promise<UpdateStatus>;
+    /** Busca una versión nueva (y la descarga en segundo plano). */
+    check: () => Promise<UpdateStatus>;
+    /** Cierra, instala la versión descargada y vuelve a abrir la app. */
+    install: () => Promise<void>;
+  };
   /**
    * Registra una función que la app ejecuta antes de cerrar la ventana
    * (para guardar lo pendiente). Devuelve cómo des-registrarla.
@@ -100,6 +111,11 @@ export const IPC_CHANNELS = {
   },
   fetchImage: "tuw:fetch-image",
   saveExport: "tuw:save-export",
+  updater: {
+    status: "tuw:updater:status",
+    check: "tuw:updater:check",
+    install: "tuw:updater:install",
+  },
   beforeClose: "tuw:before-close",
   beforeCloseRegister: "tuw:before-close-register",
   beforeCloseDone: "tuw:before-close-done",

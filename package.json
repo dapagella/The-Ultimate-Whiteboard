@@ -97,7 +97,9 @@
     "desktop:dev": "node desktop/scripts/dev.mjs",
     "desktop:build": "node desktop/scripts/build.mjs",
     "desktop:start": "electron desktop",
-    "desktop:selftest": "node desktop/scripts/selftest.mjs"
+    "desktop:selftest": "node desktop/scripts/selftest.mjs",
+    "desktop:pack": "node desktop/scripts/dist.mjs",
+    "desktop:dist": "node desktop/scripts/dist.mjs --publish"
   },
   "resolutions": {
     "strip-ansi": "6.0.1"

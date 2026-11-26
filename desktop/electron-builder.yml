@@ -1,0 +1,52 @@
+# Instalador de Windows (solo Windows, Q15). Se ejecuta con:
+#   yarn desktop:pack   → genera el instalador en desktop/release (sin publicar)
+#   (el workflow .github/workflows/release.yml lo publica en GitHub Releases al crear un tag v*)
+appId: com.dapagella.theultimatewhiteboard
+productName: The Ultimate Whiteboard
+copyright: Copyright © 2020 Excalidraw y colaboradores · Cambios propios © The Ultimate Whiteboard contributors (MIT)
+
+directories:
+  # relativo a este archivo (desktop/)
+  buildResources: build
+  output: release
+
+# El proceso principal y la app web ya vienen compilados en dist/ (esbuild los empaqueta con sus
+# dependencias): no se copia node_modules.
+files:
+  - dist/**/*
+  - package.json
+  - "!dist/**/*.map"
+
+extraResources:
+  - from: ../LICENSE
+    to: LICENSE.txt
+  - from: ../branding/THIRD_PARTY_NOTICES.md
+    to: THIRD_PARTY_NOTICES.md
+
+asar: true
+compression: normal
+
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  icon: build/icon.ico
+  artifactName: TheUltimateWhiteboard-Setup-${version}.${ext}
+
+nsis:
+  oneClick: false
+  perMachine: false # se instala solo para el usuario: no pide permisos de administrador
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: The Ultimate Whiteboard
+  deleteAppDataOnUninstall: false # al desinstalar NO se borran los dibujos (están en tu carpeta de trabajo)
+  license: ../LICENSE
+  language: "3082" # español (España)
+
+publish:
+  provider: github
+  owner: dapagella
+  repo: The-Ultimate-Whiteboard
+  releaseType: release

@@ -1,0 +1,42 @@
+name: Release
+
+# Al crear un tag que empieza con "v" (por ejemplo v0.1.0) se compila el instalador de Windows y se
+# publica en GitHub Releases junto con latest.yml (que usa la auto-actualización de la app).
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - run: yarn install --frozen-lockfile
+
+      - name: La versión del tag debe coincidir con desktop/package.json
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          VERSION="$(node -p "require('./desktop/package.json').version")"
+          if [ "$TAG" != "$VERSION" ]; then
+            echo "El tag ($TAG) no coincide con la versión de desktop/package.json ($VERSION)"
+            exit 1
+          fi
+
+      - run: yarn test:typecheck
+      - run: yarn vitest run
+
+      - name: Compilar y publicar el instalador
+        run: yarn desktop:dist
+        env:
+          # token temporal que GitHub da a cada ejecución (no es un secreto guardado en el repo)
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

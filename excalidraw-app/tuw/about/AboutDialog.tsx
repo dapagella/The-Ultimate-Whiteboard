@@ -3,6 +3,7 @@ import { Dialog } from "@excalidraw/excalidraw/components/Dialog";
 import { useAtom } from "../../app-jotai";
 
 import { aboutDialogOpenAtom } from "./aboutState";
+import { UpdateSection } from "./UpdateSection";
 
 const UPSTREAM_REPO = "https://github.com/excalidraw/excalidraw";
 
@@ -20,6 +21,7 @@ export const AboutDialog = () => {
       onCloseRequest={() => setIsOpen(false)}
     >
       <div className="tuw-about">
+        <UpdateSection />
         <p>
           <strong>The Ultimate Whiteboard</strong> es una pizarra digital
           personal construida sobre{" "}

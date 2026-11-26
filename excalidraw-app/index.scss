@@ -184,4 +184,40 @@
     opacity: 0.7;
     font-size: 0.85em;
   }
+
+  &__updates {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--default-border-color, #ccc);
+    border-radius: 8px;
+  }
+
+  &__status {
+    min-height: 1.4em;
+    font-size: 0.9em;
+    opacity: 0.8;
+  }
+
+  &__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    button {
+      padding: 6px 12px;
+      border: 1px solid var(--default-border-color, #ccc);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text-primary-color);
+      cursor: pointer;
+
+      &:disabled {
+        cursor: default;
+        opacity: 0.5;
+      }
+    }
+  }
 }

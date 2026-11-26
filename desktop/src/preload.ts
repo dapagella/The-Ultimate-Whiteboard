@@ -14,6 +14,11 @@ const api: TuwApi = {
   getAppInfo: () => ipcRenderer.invoke(IPC_CHANNELS.appInfo),
   fetchImage: (url) => ipcRenderer.invoke(IPC_CHANNELS.fetchImage, url),
   saveExport: (req) => ipcRenderer.invoke(IPC_CHANNELS.saveExport, req),
+  updater: {
+    getStatus: () => ipcRenderer.invoke(IPC_CHANNELS.updater.status),
+    check: () => ipcRenderer.invoke(IPC_CHANNELS.updater.check),
+    install: () => ipcRenderer.invoke(IPC_CHANNELS.updater.install),
+  },
   workspace: {
     getInfo: call(ch.getInfo) as TuwApi["workspace"]["getInfo"],
     chooseRoot: call(ch.chooseRoot) as TuwApi["workspace"]["chooseRoot"],

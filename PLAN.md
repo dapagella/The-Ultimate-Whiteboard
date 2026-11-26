@@ -297,13 +297,16 @@ Convención: cada tarea es atómica; "Archivos" son los principales a tocar; el 
 - Pruebas: `desktop/tests/exportFile.test.ts` (7), `excalidraw-app/tuw/export/__tests__/exportSheet.test.ts` (ida y vuelta del JSON), y `node desktop/scripts/selftest-run.mjs export` en la app real (revisa los 3 archivos generados: PNG válido, SVG con fondo+fórmula, JSON autocontenido con fondo y fórmula).
 - Nota: abrir el `.excalidraw` en excalidraw.com no muestra el fondo cuadriculado de TUW (es una extensión nuestra), pero no se pierde nada más y al volver a abrirlo en TUW sí se conserva.
 
-### Fase 11 — Instaladores y publicación en GitHub
+### Fase 11 — Instaladores y publicación en GitHub ✅
 
-- [ ] 11.1 `electron-builder`: solo Windows (NSIS `.exe`, Q15).
-- [ ] 11.2 GitHub Actions (runner Windows): al crear un tag `v*` compila y publica el instalador y `latest.yml` en Releases.
-- [ ] 11.3 README de instalación y de desarrollo (`yarn install`, `yarn desktop:dev`), `CHANGELOG`, licencia MIT + créditos a Excalidraw dentro de la app instalada.
-- [ ] 11.4 Auto-actualización con `electron-updater` desde GitHub Releases (Q16): comprobar al iniciar, descargar en segundo plano y aplicar al reiniciar; botón "Buscar actualizaciones". Requiere repo público.
-- [ ] 11.5 Revisión final: sin secretos ni rutas personales en el repo; `LICENSE` original intacto. _Acepta_: instalar el `.exe` en una PC limpia, abrir, crear una hoja y que persista tras reiniciar.
+- [x] 11.1 `electron-builder` (`desktop/electron-builder.yml`): solo Windows x64, NSIS, **por usuario** (sin permisos de administrador), carpeta elegible, accesos directos, español; al desinstalar **no se borran los dibujos**. `yarn desktop:pack` → `desktop/release/TheUltimateWhiteboard-Setup-0.1.0.exe` (~131 MB) + `latest.yml`. Sin firma digital (R4).
+- [x] 11.2 `.github/workflows/release.yml` (runner Windows): al crear un tag `v*` comprueba que el tag coincida con `desktop/package.json`, corre tipos y tests y publica el instalador + `latest.yml` en Releases con el token temporal `GITHUB_TOKEN` (ningún secreto guardado). `ci.yml`: tipos, lint y tests en cada push a `main` y PR.
+- [x] 11.3 `README.md` (instalar, aviso de SmartScreen, desarrollo, publicar), `CHANGELOG.md`, `branding/THIRD_PARTY_NOTICES.md`; `LICENSE` (MIT de Excalidraw) intacto y copiado como `resources/LICENSE.txt` dentro de la app instalada junto a los avisos de terceros; "Acerca de" muestra la versión y los créditos.
+- [x] 11.4 Auto-actualización con `electron-updater` (`desktop/src/updater.ts` + estado puro en `updateState.ts` con tests): busca a los 15 s de abrir, descarga en segundo plano, instala al cerrar; **☰ → Acerca de → Buscar actualizaciones / Reiniciar e instalar**. Solo en la app instalada (no en desarrollo ni en pruebas). Sin tokens: lee los Releases públicos (repo público verificado, Q19).
+- [x] 11.5 Revisión final: sin secretos ni rutas personales en el repo (los `.env*` solo tienen configuración); `LICENSE` original intacto.
+  - **Prueba de instalación real** (en una carpeta temporal de esta PC): instalación silenciosa → la app instalada abre, crea/guarda hojas, el lápiz y la exportación funcionan, **la hoja persiste tras cerrar y volver a abrir** → desinstalación silenciosa sin dejar carpeta, accesos ni claves de registro.
+  - **No probado**: instalar en una PC limpia distinta (lo hará el usuario con el `.exe` publicado) y una actualización real entre dos versiones publicadas (necesita dos releases).
+  - Los workflows heredados de Excalidraw que dependen de secretos de upstream solo se activan en ramas `release`/`master`/`l10n_master` o PR: no se disparan con `main` + tags. Conviene borrarlos más adelante.
 
 ## 6. Riesgos técnicos
 
