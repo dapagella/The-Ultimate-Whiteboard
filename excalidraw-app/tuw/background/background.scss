@@ -1,0 +1,143 @@
+.excalidraw .tuw-bg {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  &__types {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+  }
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 6px;
+    border: 2px solid var(--default-border-color, #ddd);
+    border-radius: 8px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font-size: 0.8rem;
+
+    svg {
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+    }
+
+    &:hover {
+      background: var(--button-hover-bg, rgba(0, 0, 0, 0.05));
+    }
+
+    &.is-on {
+      border-color: var(--color-primary, #6965db);
+      font-weight: 600;
+    }
+  }
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  &__label {
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  &__value {
+    margin-left: 0.4rem;
+    font-weight: 400;
+    opacity: 0.7;
+  }
+
+  &__swatches {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  &__swatch {
+    width: 28px;
+    height: 28px;
+    border: 2px solid rgba(0, 0, 0, 0.15);
+    border-radius: 6px;
+    cursor: pointer;
+
+    &.is-on {
+      border-color: var(--color-primary, #6965db);
+      box-shadow: 0 0 0 2px var(--color-primary, #6965db);
+    }
+  }
+
+  &__custom {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    cursor: pointer;
+    font-size: 0.8rem;
+
+    input {
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      border: 0;
+      background: none;
+      cursor: pointer;
+    }
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+
+    input[type="color"] {
+      width: 32px;
+      height: 28px;
+      padding: 0;
+      border: 0;
+      background: none;
+    }
+  }
+
+  &__range {
+    width: 100%;
+  }
+
+  &__defaults {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-top: 0.25rem;
+    border-top: 1px solid var(--default-border-color, #ddd);
+  }
+
+  &__btn {
+    padding: 0.45rem 0.8rem;
+    border: 0;
+    border-radius: 6px;
+    background: var(--color-primary, #6965db);
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.85rem;
+
+    &.is-secondary {
+      border: 1px solid var(--default-border-color, #ccc);
+      background: transparent;
+      color: inherit;
+    }
+  }
+
+  &__saved {
+    font-size: 0.8rem;
+    color: var(--color-success, #2f9e44);
+  }
+}
