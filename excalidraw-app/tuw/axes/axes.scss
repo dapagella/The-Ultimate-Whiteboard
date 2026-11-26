@@ -1,0 +1,125 @@
+.excalidraw .tuw-axes {
+  position: fixed;
+  bottom: 64px;
+  left: 50%;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  border-radius: 10px;
+  background: var(--island-bg-color, #fff);
+  box-shadow: var(--shadow-island, 0 2px 8px rgba(0, 0, 0, 0.2));
+  transform: translateX(-50%);
+
+  &__title {
+    padding: 0 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    opacity: 0.7;
+  }
+
+  &__btn {
+    padding: 6px 10px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-primary-color);
+    cursor: pointer;
+    font-size: 0.85rem;
+
+    &:hover {
+      background: var(--button-hover-bg, rgba(0, 0, 0, 0.06));
+    }
+
+    &.is-on {
+      border-color: var(--color-primary, #6965db);
+      background: var(
+        --color-surface-primary-container,
+        rgba(105, 101, 219, 0.14)
+      );
+      font-weight: 600;
+    }
+  }
+
+  &__overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 4;
+    cursor: crosshair;
+    touch-action: none;
+  }
+
+  &__hint {
+    position: absolute;
+    top: 76px;
+    left: 50%;
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: var(--color-primary, #6965db);
+    color: #fff;
+    font-size: 0.8rem;
+    pointer-events: none;
+    transform: translateX(-50%);
+  }
+
+  &__preview {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+}
+
+.excalidraw .tuw-axis-panel {
+  position: fixed;
+  top: 64px;
+  right: 12px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 190px;
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--island-bg-color, #fff);
+  box-shadow: var(--shadow-island, 0 2px 8px rgba(0, 0, 0, 0.2));
+  font-size: 0.85rem;
+
+  &__title {
+    font-weight: 600;
+  }
+
+  &__field {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+
+    input {
+      width: 70px;
+      padding: 3px 6px;
+      border: 1px solid var(--default-border-color, #ccc);
+      border-radius: 5px;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      text-align: right;
+    }
+
+    em {
+      font-style: normal;
+      opacity: 0.7;
+    }
+  }
+
+  &__angle input[type="range"] {
+    width: 100%;
+  }
+
+  &__hint {
+    font-size: 0.72rem;
+    opacity: 0.65;
+  }
+}
