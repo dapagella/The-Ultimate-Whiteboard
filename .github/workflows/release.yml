@@ -5,6 +5,8 @@ name: Release
 on:
   push:
     tags: ["v*"]
+  # también se puede lanzar a mano desde la pestaña Actions, eligiendo el tag como rama
+  workflow_dispatch:
 
 permissions:
   contents: write
