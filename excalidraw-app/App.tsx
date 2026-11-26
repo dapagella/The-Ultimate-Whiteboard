@@ -103,6 +103,9 @@ import { AboutDialog } from "./tuw/about/AboutDialog";
 import { SheetBackgroundDialog } from "./tuw/background/BackgroundDialog";
 import { AxesBar } from "./tuw/axes/AxesBar";
 import { AxisPanel } from "./tuw/axes/AxisPanel";
+import { ContentBar } from "./tuw/content/ContentBar";
+import { ImageUrlDialog } from "./tuw/content/ImageUrlDialog";
+import { LatexDialog } from "./tuw/content/LatexDialog";
 import { StrokePresetBar } from "./tuw/strokes/StrokePresetBar";
 import { getTuw, isDesktop } from "./tuw/workspace/desktopApi";
 import { serializeScene } from "./tuw/workspace/sceneFile";
@@ -782,6 +785,9 @@ const ExcalidrawWrapper = () => {
         <StrokePresetBar />
         <AxesBar />
         <AxisPanel />
+        <ContentBar />
+        <LatexDialog />
+        <ImageUrlDialog />
 
         {errorMessage && (
           <ErrorDialog onClose={() => setErrorMessage("")}>

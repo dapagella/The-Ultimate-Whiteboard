@@ -12,6 +12,7 @@ const call =
 
 const api: TuwApi = {
   getAppInfo: () => ipcRenderer.invoke(IPC_CHANNELS.appInfo),
+  fetchImage: (url) => ipcRenderer.invoke(IPC_CHANNELS.fetchImage, url),
   workspace: {
     getInfo: call(ch.getInfo) as TuwApi["workspace"]["getInfo"],
     chooseRoot: call(ch.chooseRoot) as TuwApi["workspace"]["chooseRoot"],

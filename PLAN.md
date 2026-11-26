@@ -270,12 +270,16 @@ Convención: cada tarea es atómica; "Archivos" son los principales a tocar; el 
 - **Verificado**: en el navegador (colocar, agrupar, cambiar ángulo y largo desde el panel) y en Electron (el eje se guarda en la hoja con sus 6 elementos, un solo grupo, opacidad 100 y el ángulo nuevo). 35 tests nuevos (geometría, creación, lectura, regeneración y guardado en archivo).
 - **Límites**: las herramientas no están dentro de la barra nativa de Excalidraw ni tienen atajo de teclado; si rotás el eje con el control de rotación, el panel sigue calculando desde las flechas sin tener en cuenta la rotación. No hay marcas de graduación ni cuadrícula sobre los ejes (se pueden sumar si las querés).
 
-### Fase 8 — Contenido: imágenes por URL y LaTeX
+### Fase 8 — Contenido: imágenes por URL y LaTeX ✅
 
-- [ ] 8.1 Verificar Ctrl+V y arrastrar archivos de imagen (ya existen en el editor).
-- [ ] 8.2 Diálogo "Insertar imagen desde URL" (la descarga la hace el proceso principal: sin límite de CORS).
-- [ ] 8.3 Dependencia `katex`; diálogo LaTeX con vista previa en vivo.
-- [ ] 8.4 Render a SVG (`tuw/latex/renderToSvg.ts`), inserción como imagen con `customData.tuw.latex`, doble clic para editar. _Acepta_: `\int_0^1 x^2\,dx` se inserta, se edita y se exporta bien; tests del armado del SVG.
+- [x] 8.1 Ctrl+V y arrastrar archivos de imagen: verificado en la app (eventos de pegado y de soltar insertan la imagen; el pegado necesita el foco en el lienzo, como siempre).
+- [x] 8.2 "Insertar imagen desde URL": la descarga la hace el proceso principal (`desktop/src/imageFetch.ts`: solo http/https, sin credenciales en la dirección, redirecciones validadas, 20 s de espera, máximo 15 MB, el tipo se decide por los **bytes** y no por el `Content-Type`). La imagen queda dentro del archivo de la hoja (Q17). Las fotos grandes se reducen a 1440 px.
+- [x] 8.3 `katex@0.16.22`; diálogo de fórmula con vista previa en vivo, ejemplos, tamaño, color y modo "destacado" (`excalidraw-app/tuw/content/`).
+- [x] 8.4 La fórmula es un SVG autocontenido (`<foreignObject>` + CSS inline + **solo** las tipografías KaTeX que usa, incrustadas), insertado como imagen con `customData.tuw.latex`. Doble clic sobre ella reabre el diálogo (se conserva el centro y el tamaño que le dio el usuario). Se carga KaTeX solo al usarlo.
+  - _Spike (R8)_: en Chromium/Electron un SVG con `foreignObject` y fuentes `data:` **no contamina el canvas** → PNG exporta bien; SVG exporta la fórmula como `<image>`.
+  - _Límite conocido_: al abrir el SVG exportado en editores que no soportan `foreignObject` (p. ej. Inkscape) la fórmula puede no verse; en navegadores sí.
+- Pruebas: `desktop/tests/imageUrl.test.ts` (10), `excalidraw-app/tuw/content/__tests__/latexSvg.test.ts` (16), y de punta a punta en la app real `node desktop/scripts/selftest-content.mjs` (descarga segura, interfaz, guardado en el archivo, dibujo en canvas sin contaminar).
+- Menú ☰: "Insertar fórmula…" e "Insertar imagen desde URL…"; barra "Insertar" sobre la de ejes.
 
 ### Fase 9 — Tabletas y lápiz
 

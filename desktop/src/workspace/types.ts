@@ -32,4 +32,12 @@ export type Result<T> =
   | { ok: true; value: T }
   | { ok: false; error: { code: string; message: string } };
 
+/** Imagen descargada por URL (ya validada por sus bytes). */
+export type FetchedImage = {
+  mimeType: string;
+  base64: string;
+  bytes: number;
+  name: string;
+};
+
 export type WorkspaceInfo = { root: string; lastSheet: string | null };

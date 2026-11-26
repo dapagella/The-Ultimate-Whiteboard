@@ -11,6 +11,10 @@ import { LanguageList } from "../app-language/LanguageList";
 import { appJotaiStore } from "../app-jotai";
 import { aboutDialogOpenAtom } from "../tuw/about/aboutState";
 import { backgroundDialogOpenAtom } from "../tuw/background/backgroundState";
+import {
+  imageUrlDialogOpenAtom,
+  latexDialogAtom,
+} from "../tuw/content/contentState";
 import { SheetsTabIcon } from "../tuw/explorer/icons";
 import { isDesktop } from "../tuw/workspace/desktopApi";
 
@@ -62,6 +66,18 @@ export const AppMainMenu: React.FC<{
       <MainMenu.DefaultItems.SaveToActiveFile />
       <MainMenu.DefaultItems.Export />
       <MainMenu.DefaultItems.SaveAsImage />
+      <MainMenu.Item
+        onSelect={() => appJotaiStore.set(latexDialogAtom, { mode: "new" })}
+      >
+        Insertar fórmula…
+      </MainMenu.Item>
+      {isDesktop() && (
+        <MainMenu.Item
+          onSelect={() => appJotaiStore.set(imageUrlDialogOpenAtom, true)}
+        >
+          Insertar imagen desde URL…
+        </MainMenu.Item>
+      )}
       {props.isCollabEnabled && (
         <MainMenu.DefaultItems.LiveCollaborationTrigger
           isCollaborating={props.isCollaborating}

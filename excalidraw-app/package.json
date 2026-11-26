@@ -31,6 +31,7 @@
     "i18next-browser-languagedetector": "6.1.4",
     "idb-keyval": "6.0.3",
     "jotai": "2.11.0",
+    "katex": "0.16.22",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "socket.io-client": "4.7.2",
@@ -49,5 +50,7 @@
     "serve": "npx http-server build -a localhost -p 5001 -o",
     "build:preview": "yarn build && vite preview --port 5000"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/katex": "0.16.8"
+  }
 }

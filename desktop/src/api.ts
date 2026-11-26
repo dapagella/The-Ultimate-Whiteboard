@@ -4,6 +4,7 @@
  * Todas las rutas son relativas al espacio de trabajo ("" = raíz, "/" como separador).
  */
 import type {
+  FetchedImage,
   Result,
   SheetVersion,
   TrashEntry,
@@ -13,6 +14,7 @@ import type {
 } from "./workspace/types";
 
 export type {
+  FetchedImage,
   Result,
   SheetVersion,
   TrashEntry,
@@ -62,6 +64,8 @@ export type TuwWorkspaceApi = {
 export type TuwApi = {
   getAppInfo: () => Promise<TuwAppInfo>;
   workspace: TuwWorkspaceApi;
+  /** Descarga una imagen por URL (en el proceso principal, sin límites de CORS). */
+  fetchImage: (url: string) => Promise<Result<FetchedImage>>;
   /**
    * Registra una función que la app ejecuta antes de cerrar la ventana
    * (para guardar lo pendiente). Devuelve cómo des-registrarla.
@@ -88,6 +92,7 @@ export const IPC_CHANNELS = {
     deleteTrashForever: "tuw:ws:delete-trash-forever",
     setLastSheet: "tuw:ws:set-last-sheet",
   },
+  fetchImage: "tuw:fetch-image",
   beforeClose: "tuw:before-close",
   beforeCloseRegister: "tuw:before-close-register",
   beforeCloseDone: "tuw:before-close-done",
