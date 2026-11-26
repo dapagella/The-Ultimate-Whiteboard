@@ -163,8 +163,11 @@ export class ExcalidrawFontFace {
       });
     }
 
-    // fallback url for bundled fonts
-    urls.push(new URL(assetUrl, ExcalidrawFontFace.ASSETS_FALLBACK_URL));
+    // TUW: en la app de escritorio las fuentes van empaquetadas; no se piden a esm.sh
+    if (import.meta.env.VITE_TUW_DESKTOP !== "true") {
+      // fallback url for bundled fonts
+      urls.push(new URL(assetUrl, ExcalidrawFontFace.ASSETS_FALLBACK_URL));
+    }
 
     return urls;
   }

@@ -1,3 +1,4 @@
+import { isMultiplyStroke } from "@excalidraw/element";
 import {
   BOUND_TEXT_PADDING,
   FRAME_STYLE,
@@ -522,6 +523,9 @@ const renderElementToSvg = (
     }
     case "freedraw": {
       const wrapper = svgRoot.ownerDocument.createElementNS(SVG_NS, "g");
+      if (isMultiplyStroke(element)) {
+        wrapper.setAttribute("style", "mix-blend-mode: multiply"); // TUW: resaltador
+      }
 
       const shapes = ShapeCache.generateElementShape(element, renderConfig);
       // always ordered as [background, stroke]

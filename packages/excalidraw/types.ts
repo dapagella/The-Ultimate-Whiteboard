@@ -57,6 +57,10 @@ import type {
 } from "@excalidraw/element";
 import type { GlobalPoint } from "@excalidraw/math";
 
+import type { TuwStroke } from "./scene/tuwStroke";
+
+import type { SheetBackground } from "./scene/sheetBackground";
+
 import type { Action } from "./actions/types";
 import type { Spreadsheet } from "./charts";
 import type { ClipboardData } from "./clipboard";
@@ -215,6 +219,7 @@ export type StaticCanvasAppState = Readonly<
     selectedElementsAreBeingDragged: AppState["selectedElementsAreBeingDragged"];
     gridSize: AppState["gridSize"];
     gridStep: AppState["gridStep"];
+    tuwBackground: AppState["tuwBackground"];
     frameRendering: AppState["frameRendering"];
     currentHoveredFontFamily: AppState["currentHoveredFontFamily"];
     hoveredElementIds: AppState["hoveredElementIds"];
@@ -525,6 +530,10 @@ export interface AppState {
   gridSize: number;
   gridStep: number;
   gridModeEnabled: boolean;
+  /** TUW: dibujo del fondo de la hoja (liso, cuadriculado, rayado, punteado). */
+  tuwBackground: SheetBackground;
+  /** TUW: preset de trazo activo del lápiz. */
+  tuwStroke: TuwStroke;
   viewModeEnabled: boolean;
 
   /** top-most selected groups (i.e. does not include nested groups) */

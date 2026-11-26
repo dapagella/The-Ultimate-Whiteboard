@@ -72,6 +72,12 @@ import {
   copyToClipboard,
 } from "../clipboard";
 
+import {
+  buildSvgSheetBackground,
+  normalizeSheetBackground,
+  resolvePatternStyle,
+} from "./sheetBackground";
+
 import type { RenderableElementsMap } from "./types";
 
 import type { AppState, BinaryFiles, NormalizedZoomValue } from "../types";
@@ -1136,6 +1142,30 @@ const exportToSvg = async ({
       applyDarkModeFilter(paintedBackgroundColor, exportWithDarkMode),
     );
     svgRoot.appendChild(rect);
+
+    // TUW: dibujo del fondo de la hoja (cuadriculado, rayado, punteado), igual que en el lienzo
+    const sheetBackground = normalizeSheetBackground(
+      cleanAppStateForExport(data.appState ?? {}).tuwBackground,
+    );
+    const patternRect = buildSvgSheetBackground(
+      ownerDocument,
+      defsElement,
+      sheetBackground,
+      resolvePatternStyle(
+        paintedBackgroundColor,
+        sheetBackground.lineColor,
+        exportWithDarkMode,
+      ),
+      {
+        offsetX,
+        offsetY,
+        width: exportWidth / exportScale,
+        height: exportHeight / exportScale,
+      },
+    );
+    if (patternRect) {
+      svgRoot.appendChild(patternRect);
+    }
   }
 
   // ---------------------------------------------------------------------------

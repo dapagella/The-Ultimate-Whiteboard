@@ -46,6 +46,8 @@ import type {
   InteractiveCanvasRenderConfig,
 } from "@excalidraw/excalidraw/scene/types";
 
+import { isMultiplyStroke } from "./tuwStroke";
+
 import { getCreatePath, getRenderEnvironment } from "./renderEnvironment";
 
 import { getElementAbsoluteCoords, getElementBounds } from "./bounds";
@@ -524,6 +526,9 @@ const drawElementOnCanvas = (
     case "freedraw": {
       // Draw directly to canvas
       withSavedContext(context, () => {
+        if (isMultiplyStroke(element)) {
+          context.globalCompositeOperation = "multiply"; // TUW: resaltador (exportación)
+        }
         const shapes = ShapeCache.generateElementShape(element, renderConfig);
         const createPath = getCreatePath(renderConfig.renderEnvironment);
 
@@ -827,6 +832,9 @@ const drawElementFromCanvas = (
     ((y1 + y2) / 2 + positionOffset.y + appState.scrollY) * devicePixelRatio;
 
   withSavedContext(context, () => {
+    if (isMultiplyStroke(element)) {
+      context.globalCompositeOperation = "multiply"; // TUW: resaltador
+    }
     context.scale(1 / devicePixelRatio, 1 / devicePixelRatio);
 
     const boundTextElement = getBoundTextElement(element, allElementsMap);

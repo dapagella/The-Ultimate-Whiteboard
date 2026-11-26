@@ -15,6 +15,10 @@ import {
   DEFAULT_STICKY_NOTE_BG,
 } from "@excalidraw/common";
 
+import { DEFAULT_TUW_STROKE } from "./scene/tuwStroke";
+
+import { DEFAULT_SHEET_BACKGROUND } from "./scene/sheetBackground";
+
 import type { AppState, InputDevice, NormalizedZoomValue } from "./types";
 
 /**
@@ -80,6 +84,8 @@ export const getDefaultAppState = (): Omit<
     gridSize: DEFAULT_GRID_SIZE,
     gridStep: DEFAULT_GRID_STEP,
     gridModeEnabled: false,
+    tuwBackground: DEFAULT_SHEET_BACKGROUND,
+    tuwStroke: DEFAULT_TUW_STROKE,
     isBindingEnabled: true,
     bindingPreference: "enabled",
     isMidpointSnappingEnabled: true,
@@ -228,6 +234,8 @@ const APP_STATE_STORAGE_CONF = (<
   gridSize: { browser: true, export: true, server: true },
   gridStep: { browser: true, export: true, server: true },
   gridModeEnabled: { browser: true, export: true, server: true },
+  tuwBackground: { browser: true, export: true, server: true },
+  tuwStroke: { browser: true, export: false, server: false },
   height: { browser: false, export: false, server: false },
   isBindingEnabled: { browser: true, export: false, server: false },
   boxSelectionMode: { browser: true, export: false, server: false },

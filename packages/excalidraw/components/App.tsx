@@ -8299,7 +8299,22 @@ class App extends React.Component<AppProps, AppState> {
       strokeColor: this.state.currentItemStrokeColor,
       backgroundColor: this.state.currentItemBackgroundColor,
       fillStyle: this.state.currentItemFillStyle,
-      strokeWidth: this.getCurrentItemStrokeWidth("freedraw"),
+      // TUW: el preset de trazo (lápiz, fibra, resaltador…) puede fijar su propio grosor y modo de mezcla
+      strokeWidth:
+        this.state.tuwStroke?.strokeWidth ??
+        this.getCurrentItemStrokeWidth("freedraw"),
+      customData:
+        this.state.tuwStroke?.preset ||
+        this.state.tuwStroke?.blendMode === "multiply"
+          ? {
+              tuw: {
+                stroke: {
+                  preset: this.state.tuwStroke.preset,
+                  blendMode: this.state.tuwStroke.blendMode,
+                },
+              },
+            }
+          : undefined,
       strokeStyle: this.state.currentItemStrokeStyle,
       roughness: this.state.currentItemRoughness,
       opacity: this.state.currentItemOpacity,

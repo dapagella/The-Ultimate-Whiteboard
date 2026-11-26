@@ -43,6 +43,11 @@ import type {
 } from "@excalidraw/element/types";
 
 import {
+  renderSheetBackground,
+  resolvePatternStyle,
+} from "../scene/sheetBackground";
+
+import {
   getExternalLinkImg,
   getElementLinkImg,
   getLinkHandleFromCoords,
@@ -368,6 +373,31 @@ const _renderStaticScene = ({
 
   // Apply zoom
   context.scale(appState.zoom.value, appState.zoom.value);
+
+  // TUW: fondo de hoja (cuadriculado, rayado, punteado). Va debajo de la grilla de ajuste y de los elementos.
+  if (
+    appState.tuwBackground &&
+    appState.tuwBackground.type !== "plain" &&
+    typeof appState.viewBackgroundColor === "string" &&
+    appState.viewBackgroundColor !== "transparent"
+  ) {
+    renderSheetBackground(
+      context,
+      appState.tuwBackground,
+      resolvePatternStyle(
+        appState.viewBackgroundColor,
+        appState.tuwBackground.lineColor,
+        renderConfig.theme === THEME.DARK,
+      ),
+      appState.scrollX,
+      appState.scrollY,
+      appState.zoom.value,
+      normalizedWidth / appState.zoom.value,
+      normalizedHeight / appState.zoom.value,
+      scale,
+      { cache: !isExporting },
+    );
+  }
 
   // Grid
   if (renderGrid) {

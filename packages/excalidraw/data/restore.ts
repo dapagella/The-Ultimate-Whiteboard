@@ -107,6 +107,10 @@ import type {
 
 import type { MarkOptional, Mutable } from "@excalidraw/common/utility-types";
 
+import { normalizeTuwStroke } from "../scene/tuwStroke";
+
+import { normalizeSheetBackground } from "../scene/sheetBackground";
+
 import { getDefaultAppState } from "../appState";
 
 import {
@@ -1375,6 +1379,8 @@ export const restoreAppState = (
     gridStep: getNormalizedGridStep(
       isFiniteNumber(appState.gridStep) ? appState.gridStep : DEFAULT_GRID_STEP,
     ),
+    tuwBackground: normalizeSheetBackground(appState.tuwBackground),
+    tuwStroke: normalizeTuwStroke(appState.tuwStroke),
     currentItemStickynoteStrokeColor: normalizeStickyNoteStrokeColor(
       nextAppState.currentItemStickynoteStrokeColor,
     ),
