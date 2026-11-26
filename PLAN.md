@@ -336,5 +336,20 @@ Convención: cada tarea es atómica; "Archivos" son los principales a tocar; el 
 | Q15 | Sistemas operativos | **Solo Windows** (instalador `.exe`) |
 | Q16 | Actualizaciones | **Auto-actualización** con `electron-updater` desde GitHub Releases |
 | Q17 | Imágenes | **Dentro del archivo** de la hoja |
+| Q18 | Publicación | Al terminar la Fase 11: **push** de `master` a `origin/main` y tag **`v0.1.0`** (Actions publica el instalador en Releases) |
+| Q19 | Repo | **Público** (verificado: vacío, público; `gh` con permisos `repo` y `workflow`) → auto-actualización sin tokens |
+| Q20 | Botones del lápiz (por defecto) | **Barril = goma** (mientras se mantiene), **punta trasera = goma**; configurable en Ajustes |
+| Q21 | "Solo el lápiz dibuja" | **Automático**: apagado hasta detectar un lápiz; luego el dedo solo mueve/zoom. Forzable en el menú |
 
 Consecuencia de Q16: `electron-updater` lee los Releases sin credenciales solo si el **repo es público**. Un repo privado exigiría guardar un token dentro de la app, lo cual no se hace (R11).
+
+
+---
+
+## 8. Plan de la noche (2026-11-25): Fases 9 → 10 → 11 de corrido
+
+Reglas: una fase tras otra sin pedir confirmación; al cerrar cada fase correr `yarn test:code`, `yarn test:typecheck`, `yarn vitest run`, `yarn desktop:build` y los selftests (`desktop:selftest`, `selftest-content`, `selftest-paste` + el nuevo de la fase); marcar la fase en este archivo y **commit**. Decisiones ya tomadas (Q18–Q21); ante dudas menores, elegir lo más seguro y anotarlo acá.
+
+1. **Fase 9 — Lápiz**: `excalidraw-app/tuw/pen/penInput.ts` (clasifica `pointerType`, `buttons`: barril=2, goma=32 → acción) + tests; rechazo de palma y "Solo el lápiz dibuja" (Q21) con enganche mínimo `// TUW:` en `App.tsx`; ajustes de botones (Q20) con modo "detectar botón", guardados en `localStorage`; verificar presión→grosor. Prueba e2e con `PointerEvent` sintéticos `pointerType:"pen"`. **Sin tableta real**: la prueba física queda para el usuario.
+2. **Fase 10 — Exportar hoja**: IPC `saveExport` (diálogo nativo, extensiones permitidas png/svg/excalidraw|json, escritura solo donde elige el usuario); "Exportar hoja…" en ☰ y en el menú del explorador; PNG (escala 2×, con fondo), SVG y JSON autocontenido (fondo, multiply, LaTeX, imágenes); test de ida y vuelta del JSON.
+3. **Fase 11 — Instalador y publicación**: `electron-builder` NSIS (Windows, por usuario, permite elegir carpeta), icono logo 5, `extraResources` con LICENSE/créditos; `electron-updater` (comprobar al iniciar + botón "Buscar actualizaciones"); workflow `.github/workflows/release.yml` (runner Windows, tag `v*`); README en español, CHANGELOG; revisión de secretos/rutas personales; instalar el `.exe` localmente en carpeta temporal y abrirlo. Luego **push `master:main` + tag `v0.1.0`** (Q18) y verificar que el workflow arranque; si falla, corregir y re-etiquetar.
