@@ -1,5 +1,9 @@
 # Cambios
 
+## 0.1.1
+
+- La carpeta de trabajo solo se pregunta la primera vez (o si la carpeta guardada se borró); después se usa siempre la misma. Se puede cambiar desde el panel "Hojas".
+
 ## 0.1.0 — primera versión
 
 App de escritorio para Windows basada en Excalidraw, sin cuentas ni servidores.
