@@ -205,6 +205,30 @@ const runSelfTest = (win: BrowserWindow) => {
           lang: document.documentElement.lang,
           bodyText: document.body.innerText.slice(0, 200),
         }))()`);
+        // Pegado REAL con Ctrl+V de una imagen del portapapeles (como un recorte de pantalla)
+        if (process.env.TUW_SELFTEST_PASTE_PNG) {
+          win.focus();
+          win.webContents.focus();
+          // imagen roja de 80x50 puesta en el portapapeles desde la propia página
+          await win.webContents.executeJavaScript(`(async () => {
+            const c = document.createElement("canvas");
+            c.width = 80; c.height = 50;
+            const g = c.getContext("2d");
+            g.fillStyle = "#dc1e1e"; g.fillRect(0, 0, 80, 50);
+            const blob = await new Promise((r) => c.toBlob(r, "image/png"));
+            await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+          })()`);
+          await new Promise((r) => setTimeout(r, 300));
+          for (const type of ["keyDown", "keyUp"] as const) {
+            win.webContents.sendInputEvent({
+              type,
+              keyCode: "V",
+              modifiers: ["control"],
+            });
+          }
+          await new Promise((r) => setTimeout(r, 2000));
+        }
+
         // Guion opcional que se ejecuta dentro de la ventana (clics, teclado, arrastrar…)
         let scriptResult: unknown = null;
         if (process.env.TUW_SELFTEST_SCRIPT) {
