@@ -63,3 +63,12 @@ export const resolveWorkspaceRoot = async (chosen: string): Promise<string> => {
   }
   return path.join(abs, WORKSPACE_FOLDER_NAME);
 };
+
+/** ¿La carpeta de trabajo guardada sigue existiendo? (si se borró, se vuelve a preguntar) */
+export const rootExists = async (root: string): Promise<boolean> => {
+  try {
+    return (await fs.stat(root)).isDirectory();
+  } catch {
+    return false;
+  }
+};

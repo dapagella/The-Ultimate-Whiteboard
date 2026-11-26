@@ -1,0 +1,290 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "tuw://app",
+  "elements": [
+    {
+      "id": "tolZHKhmMTN83CfvGUFPI",
+      "type": "arrow",
+      "x": 1306.4000244140625,
+      "y": 317.6000061035156,
+      "width": 283.199951171875,
+      "height": 0,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "Y8AhKQLjdvRMo7W2AV_WV"
+      ],
+      "frameId": null,
+      "index": "a0",
+      "roundness": null,
+      "seed": 536225533,
+      "version": 3,
+      "versionNonce": 1386827997,
+      "isDeleted": true,
+      "boundElements": null,
+      "updated": 1795731754850,
+      "created": 1795731735352,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "tuw": {
+          "kind": "axis",
+          "axisId": "r7AEBbb_H-mfy3D_XAvTZ",
+          "dim": 2,
+          "role": "x"
+        }
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          283.199951171875,
+          0
+        ]
+      ],
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "75NVnf4BvqWKUoW7JabmT",
+      "type": "arrow",
+      "x": 1306.4000244140625,
+      "y": 317.6000061035156,
+      "width": 0,
+      "height": 134.40000915527344,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "Y8AhKQLjdvRMo7W2AV_WV"
+      ],
+      "frameId": null,
+      "index": "a1",
+      "roundness": null,
+      "seed": 522294099,
+      "version": 3,
+      "versionNonce": 66484083,
+      "isDeleted": true,
+      "boundElements": null,
+      "updated": 1795731754850,
+      "created": 1795731735352,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "tuw": {
+          "kind": "axis",
+          "axisId": "r7AEBbb_H-mfy3D_XAvTZ",
+          "dim": 2,
+          "role": "y"
+        }
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -134.40000915527344
+        ]
+      ],
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "fNjdZvoFViPKzJMZmbjBR",
+      "type": "arrow",
+      "x": 1388,
+      "y": 582.4000244140625,
+      "width": 109.5999755859375,
+      "height": 0,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "-0Z3PYFJY2QSSgbMPIgLB"
+      ],
+      "frameId": null,
+      "index": "a2",
+      "roundness": null,
+      "seed": 613405139,
+      "version": 207,
+      "versionNonce": 912600381,
+      "isDeleted": true,
+      "boundElements": null,
+      "updated": 1795731754850,
+      "created": 1795731739991,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "tuw": {
+          "kind": "axis",
+          "axisId": "GjTCzVCZfY0FtfOBpxlkH",
+          "dim": 3,
+          "role": "x"
+        }
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          109.5999755859375,
+          0
+        ]
+      ],
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "3aX9KTLZNa9QS0p6JEoAO",
+      "type": "arrow",
+      "x": 1388,
+      "y": 582.4000244140625,
+      "width": 0,
+      "height": 107.20001220703125,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "-0Z3PYFJY2QSSgbMPIgLB"
+      ],
+      "frameId": null,
+      "index": "a3",
+      "roundness": null,
+      "seed": 174926045,
+      "version": 207,
+      "versionNonce": 800919827,
+      "isDeleted": true,
+      "boundElements": null,
+      "updated": 1795731754850,
+      "created": 1795731739991,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "tuw": {
+          "kind": "axis",
+          "axisId": "GjTCzVCZfY0FtfOBpxlkH",
+          "dim": 3,
+          "role": "y"
+        }
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -107.20001220703125
+        ]
+      ],
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    },
+    {
+      "id": "lpnqa8eLWSwfOoTsmQJTI",
+      "type": "arrow",
+      "x": 1388,
+      "y": 582.4000244140625,
+      "width": 62.96883919768729,
+      "height": 52.83712974644085,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [
+        "-0Z3PYFJY2QSSgbMPIgLB"
+      ],
+      "frameId": null,
+      "index": "a4",
+      "roundness": null,
+      "seed": 2096897907,
+      "version": 207,
+      "versionNonce": 52854173,
+      "isDeleted": true,
+      "boundElements": null,
+      "updated": 1795731754850,
+      "created": 1795731739991,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "tuw": {
+          "kind": "axis",
+          "axisId": "GjTCzVCZfY0FtfOBpxlkH",
+          "dim": 3,
+          "role": "z"
+        }
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -62.96883919768729,
+          52.83712974644085
+        ]
+      ],
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "elbowed": false
+    }
+  ],
+  "appState": {
+    "gridSize": 20,
+    "gridStep": 5,
+    "gridModeEnabled": false,
+    "tuwBackground": {
+      "type": "plain",
+      "lineColor": null,
+      "spacing": 24
+    },
+    "viewBackgroundColor": "#ffffff",
+    "lockedMultiSelections": {}
+  },
+  "files": {}
+}

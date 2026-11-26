@@ -8,6 +8,7 @@ import {
   WORKSPACE_FOLDER_NAME,
   readSettings,
   resolveWorkspaceRoot,
+  rootExists,
   writeSettings,
 } from "../src/settings";
 
@@ -80,5 +81,14 @@ describe("resolveWorkspaceRoot", () => {
     await fs.mkdir(named);
     await fs.writeFile(path.join(named, "x.txt"), "x");
     expect(await resolveWorkspaceRoot(named)).toBe(named);
+  });
+});
+
+describe("rootExists", () => {
+  it("true si la carpeta guardada existe; false si se borró o es un archivo", async () => {
+    expect(await rootExists(dir)).toBe(true);
+    await fs.writeFile(path.join(dir, "a.txt"), "x");
+    expect(await rootExists(path.join(dir, "a.txt"))).toBe(false);
+    expect(await rootExists(path.join(dir, "borrada"))).toBe(false);
   });
 });

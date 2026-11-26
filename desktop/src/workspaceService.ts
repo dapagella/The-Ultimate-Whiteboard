@@ -12,6 +12,7 @@ import {
   WORKSPACE_FOLDER_NAME,
   readSettings,
   resolveWorkspaceRoot,
+  rootExists,
   writeSettings,
 } from "./settings";
 import { WorkspaceError, splitRelPath } from "./workspace/paths";
@@ -77,7 +78,7 @@ const pickRoot = async (win: BrowserWindow | null): Promise<string | null> => {
 };
 
 /**
- * Deja el espacio de trabajo listo. En el PRIMER arranque pregunta dónde guardar
+ * Deja el espacio de trabajo listo. En el PRIMER arranque (o si la carpeta guardada se borró) pregunta dónde guardar
  * (Q14); si se cancela se usa Documentos/The Ultimate Whiteboard.
  */
 export const ensureWorkspace = async (
@@ -87,6 +88,10 @@ export const ensureWorkspace = async (
   const settings = await readSettings(settingsFile());
   // `forceRoot` solo lo usan las pruebas automáticas (sin diálogos)
   let root = forceRoot ?? settings.workspaceRoot;
+  // la carpeta elegida antes se usa siempre; solo si ya no existe (se borró) se vuelve a preguntar
+  if (root && !forceRoot && !(await rootExists(root))) {
+    root = undefined;
+  }
 
   if (!root) {
     const msg = {
