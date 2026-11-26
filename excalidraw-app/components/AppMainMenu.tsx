@@ -1,10 +1,6 @@
-import {
-  loginIcon,
-  ExcalLogo,
-  eyeIcon,
-} from "@excalidraw/excalidraw/components/icons";
-import { useI18n } from "@excalidraw/excalidraw/i18n";
+import { eyeIcon, helpIcon } from "@excalidraw/excalidraw/components/icons";
 import { MainMenu } from "@excalidraw/excalidraw/index";
+import { useExcalidrawAPI } from "@excalidraw/excalidraw";
 import React from "react";
 
 import { isDevEnv } from "@excalidraw/common";
@@ -12,9 +8,31 @@ import { isDevEnv } from "@excalidraw/common";
 import type { Theme } from "@excalidraw/element/types";
 
 import { LanguageList } from "../app-language/LanguageList";
-import { isExcalidrawPlusSignedUser } from "../app_constants";
+import { appJotaiStore } from "../app-jotai";
+import { aboutDialogOpenAtom } from "../tuw/about/aboutState";
+import { backgroundDialogOpenAtom } from "../tuw/background/backgroundState";
+import { SheetsTabIcon } from "../tuw/explorer/icons";
+import { isDesktop } from "../tuw/workspace/desktopApi";
+
+import { SHEETS_SIDEBAR_TAB } from "./AppSidebar";
 
 import { saveDebugState } from "./DebugCanvas";
+
+const SheetBackgroundIcon = () => (
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.75"
+    strokeLinecap="round"
+    aria-hidden="true"
+  >
+    <rect x="4" y="4" width="16" height="16" rx="2" />
+    <path d="M4 9.33h16M4 14.66h16M9.33 4v16M14.66 4v16" />
+  </svg>
+);
 
 export const AppMainMenu: React.FC<{
   onCollabDialogOpen: () => any;
@@ -23,9 +41,23 @@ export const AppMainMenu: React.FC<{
   theme: Theme | "system";
   refresh: () => void;
 }> = React.memo((props) => {
-  const { t } = useI18n();
+  const excalidrawAPI = useExcalidrawAPI();
   return (
     <MainMenu>
+      {isDesktop() && (
+        <MainMenu.Item
+          icon={<SheetsTabIcon />}
+          onSelect={() =>
+            excalidrawAPI?.toggleSidebar({
+              name: "default",
+              tab: SHEETS_SIDEBAR_TAB,
+              force: true,
+            })
+          }
+        >
+          Hojas y carpetas
+        </MainMenu.Item>
+      )}
       <MainMenu.DefaultItems.LoadScene />
       <MainMenu.DefaultItems.SaveToActiveFile />
       <MainMenu.DefaultItems.Export />
@@ -41,25 +73,12 @@ export const AppMainMenu: React.FC<{
       <MainMenu.DefaultItems.Help />
       <MainMenu.DefaultItems.ClearCanvas />
       <MainMenu.Separator />
-      <MainMenu.ItemLink
-        icon={ExcalLogo}
-        href={`${
-          import.meta.env.VITE_APP_PLUS_LP
-        }/plus?utm_source=excalidraw&utm_medium=app&utm_content=hamburger`}
-        className=""
+      <MainMenu.Item
+        icon={helpIcon}
+        onSelect={() => appJotaiStore.set(aboutDialogOpenAtom, true)}
       >
-        Excalidraw+
-      </MainMenu.ItemLink>
-      <MainMenu.DefaultItems.Socials />
-      <MainMenu.ItemLink
-        icon={loginIcon}
-        href={`${import.meta.env.VITE_APP_PLUS_APP}${
-          isExcalidrawPlusSignedUser ? "" : "/sign-up"
-        }?utm_source=signin&utm_medium=app&utm_content=hamburger`}
-        className="highlighted"
-      >
-        {isExcalidrawPlusSignedUser ? t("labels.signIn") : t("labels.signUp")}
-      </MainMenu.ItemLink>
+        Acerca de
+      </MainMenu.Item>
       {isDevEnv() && (
         <MainMenu.Item
           icon={eyeIcon}
@@ -84,6 +103,12 @@ export const AppMainMenu: React.FC<{
         <LanguageList style={{ width: "100%" }} />
       </MainMenu.ItemCustom>
       <MainMenu.DefaultItems.ChangeCanvasBackground />
+      <MainMenu.Item
+        icon={<SheetBackgroundIcon />}
+        onSelect={() => appJotaiStore.set(backgroundDialogOpenAtom, true)}
+      >
+        Fondo de la hoja…
+      </MainMenu.Item>
     </MainMenu>
   );
 });

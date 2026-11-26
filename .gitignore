@@ -27,3 +27,7 @@ dev-dist
 html
 meta*.json
 .claude
+
+# TUW: recursos de la app de escritorio (ícono) sí se versionan
+!desktop/build
+!desktop/build/**

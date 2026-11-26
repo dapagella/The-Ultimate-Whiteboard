@@ -156,3 +156,32 @@
     --plus-banner-subtitle: #8f8cc4;
   }
 }
+
+// The Ultimate Whiteboard — logo de texto de la pantalla de bienvenida
+.excalidraw .tuw-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 2.25rem;
+  line-height: 1.1;
+  text-align: center;
+  color: var(--color-primary);
+
+  img {
+    border-radius: 16px;
+  }
+}
+
+.excalidraw .tuw-about {
+  line-height: 1.5;
+
+  a {
+    color: var(--color-primary);
+  }
+
+  &__small {
+    opacity: 0.7;
+    font-size: 0.85em;
+  }
+}

@@ -1,5 +1,7 @@
 // define `EXCALIDRAW_ASSET_PATH` as a SSOT
-const OSS_FONTS_CDN = "https://excalidraw.nyc3.cdn.digitaloceanspaces.com/oss/";
+// TUW: las fuentes se sirven SIEMPRE desde la propia app (funciona sin internet);
+// upstream las pedía a https://excalidraw.nyc3.cdn.digitaloceanspaces.com/oss/
+const OSS_FONTS_CDN = "/";
 const OSS_FONTS_FALLBACK = "/";
 
 /**

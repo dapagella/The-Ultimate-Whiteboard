@@ -34,16 +34,16 @@ import type { UploadMetadata } from "firebase/storage";
 // private
 // -----------------------------------------------------------------------------
 
-let FIREBASE_CONFIG: Record<string, any>;
-try {
-  FIREBASE_CONFIG = JSON.parse(import.meta.env.VITE_APP_FIREBASE_CONFIG);
-} catch (error: any) {
-  console.warn(
-    `Error JSON parsing firebase config. Supplied value: ${
-      import.meta.env.VITE_APP_FIREBASE_CONFIG
-    }`,
-  );
-  FIREBASE_CONFIG = {};
+// TUW: Firebase quedó desactivado (colaboración apagada, ver tuw/flags.ts).
+// Sin VITE_APP_FIREBASE_CONFIG no se inicializa nada.
+let FIREBASE_CONFIG: Record<string, any> = {};
+const _rawFirebaseConfig = import.meta.env.VITE_APP_FIREBASE_CONFIG;
+if (_rawFirebaseConfig) {
+  try {
+    FIREBASE_CONFIG = JSON.parse(_rawFirebaseConfig);
+  } catch (error: any) {
+    console.warn("Error JSON parsing firebase config.");
+  }
 }
 
 const lazy = <T>(load: () => Promise<T>) => {
