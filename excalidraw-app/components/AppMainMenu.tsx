@@ -16,6 +16,7 @@ import {
   latexDialogAtom,
 } from "../tuw/content/contentState";
 import { SheetsTabIcon } from "../tuw/explorer/icons";
+import { penDialogOpenAtom } from "../tuw/pen/penState";
 import { isDesktop } from "../tuw/workspace/desktopApi";
 
 import { SHEETS_SIDEBAR_TAB } from "./AppSidebar";
@@ -84,6 +85,11 @@ export const AppMainMenu: React.FC<{
           onSelect={() => props.onCollabDialogOpen()}
         />
       )}
+      <MainMenu.Item
+        onSelect={() => appJotaiStore.set(penDialogOpenAtom, true)}
+      >
+        Lápiz y tableta…
+      </MainMenu.Item>
       <MainMenu.DefaultItems.CommandPalette className="highlighted" />
       <MainMenu.DefaultItems.SearchMenu />
       <MainMenu.DefaultItems.Help />

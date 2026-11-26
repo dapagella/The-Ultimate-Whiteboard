@@ -104,6 +104,8 @@ import { SheetBackgroundDialog } from "./tuw/background/BackgroundDialog";
 import { AxesBar } from "./tuw/axes/AxesBar";
 import { AxisPanel } from "./tuw/axes/AxisPanel";
 import { ContentBar } from "./tuw/content/ContentBar";
+import { PenDialog } from "./tuw/pen/PenDialog";
+import { PenGuard } from "./tuw/pen/PenGuard";
 import { ImageUrlDialog } from "./tuw/content/ImageUrlDialog";
 import { LatexDialog } from "./tuw/content/LatexDialog";
 import { StrokePresetBar } from "./tuw/strokes/StrokePresetBar";
@@ -786,6 +788,8 @@ const ExcalidrawWrapper = () => {
         <AxesBar />
         <AxisPanel />
         <ContentBar />
+        <PenGuard />
+        <PenDialog />
         <LatexDialog />
         <ImageUrlDialog />
 

@@ -281,11 +281,14 @@ Convención: cada tarea es atómica; "Archivos" son los principales a tocar; el 
 - Pruebas: `desktop/tests/imageUrl.test.ts` (10), `excalidraw-app/tuw/content/__tests__/latexSvg.test.ts` (16), y de punta a punta en la app real `node desktop/scripts/selftest-content.mjs` (descarga segura, interfaz, guardado en el archivo, dibujo en canvas sin contaminar).
 - Menú ☰: "Insertar fórmula…" e "Insertar imagen desde URL…"; barra "Insertar" sobre la de ejes.
 
-### Fase 9 — Tabletas y lápiz
+### Fase 9 — Tabletas y lápiz ✅
 
-- [ ] 9.1 `tuw/pen/penInput.ts` (clasificar evento → acción) + tests.
-- [ ] 9.2 Rechazo de palma reforzado y toggle "Solo el lápiz dibuja" (`packages/excalidraw/components/App.tsx`, enganche mínimo).
-- [ ] 9.3 Botones del lápiz configurables (UI de ajustes; guardado local). _Acepta_: con tableta Wacom/XP-Pen: la presión cambia el grosor; apoyar la palma no dibuja; el botón de barril ejecuta la acción elegida.
+- [x] 9.1 `excalidraw-app/tuw/pen/penInput.ts` (lógica pura: clasifica barril/goma/palma, decide qué hacer) + 13 tests.
+- [x] 9.2 Rechazo de palma y "Solo el lápiz dibuja": **sin tocar `App.tsx` del editor**. El editor ya activa `penMode` solo al detectar un lápiz (Q21 automático) y en ese modo el dedo no dibuja; se agregó (`PenGuard.tsx`, escucha en fase de captura, solo sobre el lienzo) el rechazo reforzado: mientras el lápiz está cerca (700 ms) o el contacto es grande (≥40 px = palma) se ignoran los toques. El interruptor "Solo el lápiz dibuja" está en el diálogo "Lápiz y tableta…" (menú ☰).
+- [x] 9.3 Botón del costado configurable (Q20: por defecto **borrar**; también menú, mover la hoja o nada) con modo **"Detectar botón"** que muestra lo que manda la tableta (R9). El evento se "disfraza" (goma = botón 5, mover = botón del medio) y se reenvía al editor. Ajustes guardados en `localStorage` de esta PC. La goma de la punta trasera ya la maneja el editor.
+- Presión → grosor: verificado (el trazo del lápiz guarda `pressures` reales y `simulatePressure:false`).
+- Pruebas: `penInput.test.ts` + `node desktop/scripts/selftest-run.mjs pen` (eventos `pen` simulados en la app real: presión, barril→goma, ajustes guardados). Nuevo runner genérico `desktop/scripts/selftest-run.mjs <nombre>`.
+- **Pendiente humano**: probar con una tableta Wacom/XP-Pen real (presión, palma, botones) y, si el botón no hace lo esperado, mirar "Detectar botón".
 
 ### Fase 10 — Exportación de hoja
 
