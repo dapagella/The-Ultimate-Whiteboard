@@ -20,11 +20,14 @@ export type PenSettings = {
   barrel: BarrelAction;
   /** Ignora el dedo y la palma mientras el lápiz está cerca de la pantalla. */
   rejectPalm: boolean;
+  /** Dibujando con el lápiz, si lo mantenés quieto un momento el trazo se vuelve una línea recta. */
+  straightHold: boolean;
 };
 
 export const DEFAULT_PEN_SETTINGS: PenSettings = {
   barrel: "eraser", // Q20
   rejectPalm: true,
+  straightHold: true,
 };
 
 export const normalizePenSettings = (raw: unknown): PenSettings => {
@@ -37,8 +40,24 @@ export const normalizePenSettings = (raw: unknown): PenSettings => {
       typeof r.rejectPalm === "boolean"
         ? r.rejectPalm
         : DEFAULT_PEN_SETTINGS.rejectPalm,
+    straightHold:
+      typeof r.straightHold === "boolean"
+        ? r.straightHold
+        : DEFAULT_PEN_SETTINGS.straightHold,
   };
 };
+
+/** Quieto este tiempo (ms), con una tolerancia de unos píxeles, y el trazo se endereza. */
+export const HOLD_MS = 500;
+export const HOLD_TOLERANCE_PX = 4;
+/** Un trazo más corto que esto (px) no se endereza (puntos, o quedarse quieto al empezar). */
+export const MIN_STRAIGHT_PX = 15;
+
+/** ¿El trazo ya recorrió lo suficiente como para enderezarlo? */
+export const canStraighten = (
+  start: { x: number; y: number },
+  now: { x: number; y: number },
+) => Math.hypot(now.x - start.x, now.y - start.y) >= MIN_STRAIGHT_PX;
 
 export type PointerLike = {
   pointerType: string;

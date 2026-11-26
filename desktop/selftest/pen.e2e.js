@@ -80,6 +80,30 @@
   canvas.dispatchEvent(pe("pen", "pointerup", 450, 608));
   await sleep(300);
 
+  // 2b) línea recta: trazo curvo, quieto 800 ms y se endereza hasta donde se levanta el lápiz
+  key("p");
+  await sleep(150);
+  canvas.dispatchEvent(pe("pen", "pointerdown", 700, 200));
+  for (const [x, y] of [
+    [730, 230],
+    [760, 205],
+    [800, 240],
+    [840, 225],
+  ]) {
+    canvas.dispatchEvent(pe("pen", "pointermove", x, y));
+    await sleep(30);
+  }
+  await sleep(800);
+  for (const [x, y] of [
+    [900, 280],
+    [960, 330],
+  ]) {
+    canvas.dispatchEvent(pe("pen", "pointermove", x, y));
+    await sleep(30);
+  }
+  canvas.dispatchEvent(pe("pen", "pointerup", 960, 330));
+  await sleep(300);
+
   // 3) rechazo de palma: con el lápiz cerca, el dedo se ignora (se mide con un clic de dedo sobre la hoja)
   key("v");
   await sleep(200);
@@ -109,6 +133,22 @@
   const strokes = els.filter((e) => e.type === "freedraw");
   const first = strokes[0];
   const second = strokes[1];
+  const line = strokes[2];
+  let recta = false;
+  if (line) {
+    const p = line.points;
+    const [a, b] = [p[0], p[p.length - 1]];
+    const L = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    const dev = Math.max(
+      ...p.map(
+        (q) =>
+          Math.abs(
+            (b[0] - a[0]) * (a[1] - q[1]) - (a[0] - q[0]) * (b[1] - a[1]),
+          ) / L,
+      ),
+    );
+    recta = L > 200 && dev < 0.5;
+  }
   return {
     steps: {
       presion: {
@@ -120,6 +160,7 @@
         segundoTrazoBorrado: !!second && second.isDeleted === true,
         primerTrazoIntacto: !!first && first.isDeleted === false,
       },
+      lineaRecta: { seEnderezo: recta },
       ajustes: {
         porDefectoBorrar: defaultEraser,
         guardoMoverHoja: saved?.barrel === "pan" && saved?.rejectPalm === true,

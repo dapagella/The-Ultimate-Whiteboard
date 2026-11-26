@@ -221,3 +221,11 @@
     }
   }
 }
+
+// Puntero de dibujo: un punto chico pero visible (con borde blanco, se ve sobre cualquier fondo)
+// en vez de la cruz. El editor pone el cursor como estilo en línea ("cursor: crosshair").
+.excalidraw canvas.interactive[style*="cursor: crosshair"] {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"><circle cx="6" cy="6" r="3.2" fill="%231e1e1e" stroke="white" stroke-width="1.6"/></svg>')
+      6 6,
+    crosshair !important;
+}

@@ -87,6 +87,24 @@ export const PenDialog = () => {
           </span>
         </label>
 
+        <label className="tuw-pen__row">
+          <input
+            type="checkbox"
+            data-testid="tuw-pen-straight"
+            checked={settings.straightHold}
+            onChange={(e) =>
+              savePenSettings({ ...settings, straightHold: e.target.checked })
+            }
+          />
+          <span>
+            <b>Línea recta al mantener quieto</b>
+            <small>
+              Dibujando con el lápiz, si lo dejás quieto un momento el trazo se
+              vuelve una línea recta que sigue al lápiz hasta que lo levantás.
+            </small>
+          </span>
+        </label>
+
         <div className="tuw-pen__section">
           <div className="tuw-pen__label">Botón del costado del lápiz</div>
           {BARREL_ACTIONS.map((a) => (

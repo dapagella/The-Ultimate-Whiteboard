@@ -2,12 +2,14 @@ import { describe, expect, it } from "vitest";
 
 import {
   DEFAULT_PEN_SETTINGS,
+  MIN_STRAIGHT_PX,
   PALM_SIZE,
   PEN_GRACE_MS,
   describePointer,
   isBarrelPressed,
   isEraserTip,
   isPalmLike,
+  canStraighten,
   normalizePenSettings,
   retargetFor,
   shouldRejectTouch,
@@ -132,9 +134,16 @@ describe("normalizePenSettings", () => {
     expect(
       normalizePenSettings({ barrel: "hackear", rejectPalm: "si" }),
     ).toEqual(DEFAULT_PEN_SETTINGS);
-    expect(normalizePenSettings({ barrel: "pan", rejectPalm: false })).toEqual({
+    expect(
+      normalizePenSettings({
+        barrel: "pan",
+        rejectPalm: false,
+        straightHold: false,
+      }),
+    ).toEqual({
       barrel: "pan",
       rejectPalm: false,
+      straightHold: false,
     });
   });
 });
@@ -149,5 +158,18 @@ describe("describePointer (modo detectar botón)", () => {
     expect(describePointer({ ...pen(5, 32), type: "pointerdown" })).toContain(
       "goma",
     );
+  });
+});
+
+describe("línea recta al mantener quieto", () => {
+  it("viene activada por defecto", () => {
+    expect(DEFAULT_PEN_SETTINGS.straightHold).toBe(true);
+  });
+
+  it("solo endereza trazos que ya recorrieron algo (no puntos)", () => {
+    const o = { x: 0, y: 0 };
+    expect(canStraighten(o, { x: 3, y: 4 })).toBe(false);
+    expect(canStraighten(o, { x: MIN_STRAIGHT_PX, y: 0 })).toBe(true);
+    expect(canStraighten(o, { x: 30, y: 40 })).toBe(true);
   });
 });

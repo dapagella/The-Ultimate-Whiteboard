@@ -1,5 +1,11 @@
 # Cambios
 
+## 0.1.2
+
+- Línea recta con el lápiz: dibujando, si lo mantenés quieto ~0,5 s el trazo se endereza y sigue al lápiz hasta que lo levantás (se puede apagar en ☰ → Lápiz y tableta).
+- Clic derecho en el panel de hojas: el menú ya no queda tapado por el panel (renombrar, mover, duplicar, exportar, papelera, nueva carpeta dentro de una carpeta).
+- El puntero de dibujo es un punto chico y visible en vez de la cruz.
+
 ## 0.1.1
 
 - La carpeta de trabajo solo se pregunta la primera vez (o si la carpeta guardada se borró); después se usa siempre la misma. Se puede cambiar desde el panel "Hojas".
