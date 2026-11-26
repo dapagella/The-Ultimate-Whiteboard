@@ -17,7 +17,6 @@ import type {
 } from "@excalidraw/element/types";
 
 import {
-  DEFAULT_LABELS,
   axisTips,
   labelCenter,
   normalizeParams,
@@ -132,7 +131,10 @@ export type CreatedAxis = {
   elements: ExcalidrawElement[];
 };
 
-/** Arma un eje 2D o 3D completo (flechas + etiquetas) con el origen en `origin`. */
+/**
+ * Arma un eje 2D o 3D (flechas) con el origen en `origin`. Las letras no se crean salvo que se
+ * pasen en `labels`: por defecto se escriben a mano.
+ */
 export const createAxisElements = (
   dim: AxisDim,
   origin: Vec,
@@ -157,16 +159,20 @@ export const createAxisElements = (
         groupId,
       ),
     );
-    const c = labelCenter(tip);
-    texts.push(
-      makeLabel(
-        { x: origin.x + c.x, y: origin.y + c.y },
-        labels[role] ?? DEFAULT_LABELS[role],
-        style,
-        { kind: "axis", axisId, dim, role: `label-${role}` },
-        groupId,
-      ),
-    );
+    // Las letras NO se crean por defecto: se escriben a mano con la herramienta de texto.
+    const text = labels[role];
+    if (text) {
+      const c = labelCenter(tip);
+      texts.push(
+        makeLabel(
+          { x: origin.x + c.x, y: origin.y + c.y },
+          text,
+          style,
+          { kind: "axis", axisId, dim, role: `label-${role}` },
+          groupId,
+        ),
+      );
+    }
   }
   return { axisId, groupId, elements: [...arrows, ...texts] };
 };

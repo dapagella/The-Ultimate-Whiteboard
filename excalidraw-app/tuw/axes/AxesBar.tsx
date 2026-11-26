@@ -54,9 +54,11 @@ export const AxesBar = () => {
     );
     const { elements, groupId } = createAxisElements(dim, origin, params, {
       ...DEFAULT_AXIS_STYLE,
-      strokeColor: HEX.test(s.currentItemStrokeColor)
-        ? s.currentItemStrokeColor
-        : DEFAULT_AXIS_STYLE.strokeColor,
+      // el color de un preset de trazo (p. ej. el amarillo del resaltador) no se usa para los ejes
+      strokeColor:
+        !s.tuwStroke?.preset && HEX.test(s.currentItemStrokeColor)
+          ? s.currentItemStrokeColor
+          : DEFAULT_AXIS_STYLE.strokeColor,
       opacity: 100, // los ejes siempre opacos (aunque esté activo el resaltador)
     });
     api.updateScene({

@@ -88,7 +88,7 @@ The Ultimate Whiteboard/            ← espacio de trabajo
 
 ### 4.1 Eje 2D y Eje 3D
 
-- Módulo puro `excalidraw-app/tuw/axes/geometry.ts`: `axis2D({origin, lengthX, lengthY})` y `axis3D({origin, lengthX, lengthY, lengthZ, angleZDeg})` devuelven segmentos + posición de etiquetas. Ángulo Z por defecto 225° (diagonal hacia abajo a la izquierda), rango permitido 180°–270°.
+- Módulo puro `excalidraw-app/tuw/axes/geometry.ts`: `axis2D({origin, lengthX, lengthY})` y `axis3D({origin, lengthX, lengthY, lengthZ, angleZDeg})` devuelven segmentos + posición de etiquetas. Ángulo Z por defecto 210° (diagonal hacia abajo a la izquierda, 30° bajo la horizontal), rango permitido 180°–270°.
 - Construcción en `excalidraw-app/tuw/axes/createAxes.ts`: 2 (o 3) elementos `arrow` desde el origen + `text` para etiquetas (`x`, `y`, `z`, editables como texto normal), todos con el mismo `groupIds` → se mueven juntos ("agrupada"). Cada uno lleva `customData: { tuw: { kind: "axis", dim: 2|3, role: "x"|"y"|"z"|"label", angleZDeg } }`.
 - Edición: panel en las propiedades del elemento seleccionado (cuando el grupo es un eje) con ángulo Z y largos → regenera los puntos de las flechas conservando estilo y etiquetas.
 - Herramienta: dos botones en la barra ("Eje 2D", "Eje 3D"); clic en el lienzo = origen; arrastrar = tamaño.
@@ -263,10 +263,10 @@ Convención: cada tarea es atómica; "Archivos" son los principales a tocar; el 
 
 **Notas de la Fase 7 (hecho):**
 
-- **Geometría** (`excalidraw-app/tuw/axes/geometry.ts`, pura y testeada): X a la derecha, Y hacia arriba, Z en diagonal hacia abajo a la izquierda con ángulo entre 180° y 270° (por defecto 225°) y largo propio (por defecto 62 % de X por la perspectiva). Parámetros fuera de rango se corrigen; un clic sin arrastre usa el tamaño por defecto.
+- **Geometría** (`excalidraw-app/tuw/axes/geometry.ts`, pura y testeada): X a la derecha, Y hacia arriba, Z en diagonal hacia abajo a la izquierda con ángulo entre 180° y 270° (por defecto 210°, bien diagonal: 30° bajo la horizontal) y largo propio (por defecto 75 % de X por la perspectiva). Parámetros fuera de rango se corrigen; un clic sin arrastre usa el tamaño por defecto.
 - **Elementos** (`elements.ts`): cada eje son flechas + etiquetas normales de Excalidraw, **agrupadas**, con `customData.tuw = { kind: "axis", axisId, dim, role }`. Se mueven y escalan como un solo objeto y el archivo sigue abriéndose en excalidraw.com. `readAxis` lee el tamaño actual desde las flechas (respeta lo que escalaste) y `regenerateAxis` ajusta ángulo y largos manteniendo ids, grupo, origen y **el texto de las etiquetas aunque lo hayas editado**.
 - **Herramientas** (`AxesBar.tsx`): botones "Eje 2D" y "Eje 3D" abajo al centro (no en la barra de Excalidraw, para no tocar su núcleo). Clic = coloca el eje con tamaño por defecto; arrastrar = elige el tamaño con vista previa; Esc o clic derecho cancela. Los ejes salen siempre opacos.
-- **Panel** (`AxisPanel.tsx`): al seleccionar un eje aparece con Largo X/Y/Z y Ángulo Z (campo + deslizador, entre 180° y 270°). Las etiquetas se editan con doble clic, como cualquier texto.
+- **Panel** (`AxisPanel.tsx`): al seleccionar un eje aparece con Largo X/Y/Z y Ángulo Z (campo + deslizador, entre 180° y 270°). Las letras de cada eje NO se crean: se escriben a mano con la herramienta de texto.
 - **Verificado**: en el navegador (colocar, agrupar, cambiar ángulo y largo desde el panel) y en Electron (el eje se guarda en la hoja con sus 6 elementos, un solo grupo, opacidad 100 y el ángulo nuevo). 35 tests nuevos (geometría, creación, lectura, regeneración y guardado en archivo).
 - **Límites**: las herramientas no están dentro de la barra nativa de Excalidraw ni tienen atajo de teclado; si rotás el eje con el control de rotación, el panel sigue calculando desde las flechas sin tener en cuenta la rotación. No hay marcas de graduación ni cuadrícula sobre los ejes (se pueden sumar si las querés).
 

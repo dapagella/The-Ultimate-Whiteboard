@@ -30,18 +30,14 @@ const byRole = (els: ExcalidrawElement[], role: string) =>
   els.find((e) => roleOf(e) === role)!;
 
 describe("createAxisElements", () => {
-  it("2D: dos flechas y dos etiquetas, todas del mismo grupo y del mismo eje", () => {
+  it("2D: dos flechas SIN letras por defecto, del mismo grupo y del mismo eje", () => {
     const { elements, groupId, axisId } = createAxisElements(
       2,
       { x: 100, y: 200 },
       { lengthX: 300, lengthY: 180 },
     );
     expect(arrows(elements)).toHaveLength(2);
-    expect(
-      texts(elements)
-        .map((t) => t.text)
-        .sort(),
-    ).toEqual(["x", "y"]);
+    expect(texts(elements)).toHaveLength(0); // las letras se escriben a mano
     expect(
       elements.every(
         (e) => e.groupIds.length === 1 && e.groupIds[0] === groupId,
@@ -52,18 +48,14 @@ describe("createAxisElements", () => {
     ).toBe(true);
   });
 
-  it("3D: tres flechas y tres etiquetas (x, y, z)", () => {
+  it("3D: tres flechas y ninguna letra por defecto", () => {
     const { elements } = createAxisElements(
       3,
       { x: 0, y: 0 },
       { lengthX: 300, lengthY: 300 },
     );
     expect(arrows(elements)).toHaveLength(3);
-    expect(
-      texts(elements)
-        .map((t) => t.text)
-        .sort(),
-    ).toEqual(["x", "y", "z"]);
+    expect(texts(elements)).toHaveLength(0);
   });
 
   it("las flechas nacen en el origen y terminan donde dice la geometría, con punta", () => {
@@ -98,6 +90,8 @@ describe("createAxisElements", () => {
       2,
       { x: 0, y: 0 },
       { lengthX: 300, lengthY: 200 },
+      undefined,
+      { x: "x", y: "y" },
     );
     const lx = byRole(elements, "label-x") as ExcalidrawTextElement;
     const ly = byRole(elements, "label-y") as ExcalidrawTextElement;
@@ -139,8 +133,33 @@ describe("createAxisElements", () => {
     expect(a.axisId).not.toBe(b.axisId);
     expect(a.groupId).not.toBe(b.groupId);
     expect(new Set([...a.elements, ...b.elements].map((e) => e.id)).size).toBe(
-      8,
+      4,
     );
+  });
+});
+
+describe("letras opcionales", () => {
+  it("sin pedirlas no hay textos; si se piden, se crean solo las pedidas", () => {
+    expect(
+      texts(createAxisElements(3, { x: 0, y: 0 }, {}).elements),
+    ).toHaveLength(0);
+    const { elements } = createAxisElements(3, { x: 0, y: 0 }, {}, undefined, {
+      x: "t",
+    });
+    expect(texts(elements).map((t) => t.text)).toEqual(["t"]);
+  });
+
+  it("el eje Z por defecto es bien diagonal (30° bajo la horizontal), no vertical", () => {
+    const { elements } = createAxisElements(
+      3,
+      { x: 0, y: 0 },
+      { lengthX: 200, lengthY: 200 },
+    );
+    const z = byRole(elements, "z") as ExcalidrawArrowElement;
+    const [dx, dy] = z.points[1];
+    const angleBelowHorizontal = (Math.atan2(dy, -dx) * 180) / Math.PI;
+    expect(angleBelowHorizontal).toBeCloseTo(30, 3);
+    expect(Math.abs(dx)).toBeGreaterThan(Math.abs(dy)); // más horizontal que vertical
   });
 });
 
@@ -204,6 +223,8 @@ describe("regenerateAxis", () => {
       2,
       { x: 0, y: 0 },
       { lengthX: 200, lengthY: 200 },
+      undefined,
+      { x: "x", y: "y" },
     );
     const edited = elements.map((e) =>
       roleOf(e) === "label-x"
@@ -247,7 +268,7 @@ describe("regenerateAxis", () => {
 describe("selección y archivo", () => {
   it("axisIdFromSelection encuentra el eje de cualquier elemento seleccionado", () => {
     const { elements, axisId } = createAxisElements(2, { x: 0, y: 0 }, {});
-    expect(axisIdFromSelection(elements, { [elements[3].id]: true })).toBe(
+    expect(axisIdFromSelection(elements, { [elements[1].id]: true })).toBe(
       axisId,
     );
     expect(axisIdFromSelection(elements, {})).toBeNull();

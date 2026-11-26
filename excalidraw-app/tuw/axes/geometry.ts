@@ -20,18 +20,12 @@ export type AxisParams = {
 /** El eje Z va "hacia abajo a la izquierda": entre 180° (horizontal, a la izquierda) y 270° (vertical, hacia abajo). */
 export const MIN_Z_ANGLE = 180;
 export const MAX_Z_ANGLE = 270;
-export const DEFAULT_Z_ANGLE = 225;
+export const DEFAULT_Z_ANGLE = 210; // 30° bajo la horizontal: bien diagonal
 export const MIN_AXIS_LENGTH = 20;
 export const MAX_AXIS_LENGTH = 5000;
 export const DEFAULT_AXIS_LENGTH = 220;
 /** Proporción por defecto de Z respecto de X (acortado por la perspectiva). */
-export const DEFAULT_Z_RATIO = 0.62;
-
-export const DEFAULT_LABELS: Record<AxisRole, string> = {
-  x: "x",
-  y: "y",
-  z: "z",
-};
+export const DEFAULT_Z_RATIO = 0.75;
 
 const clamp = (v: number, min: number, max: number) =>
   Math.min(max, Math.max(min, v));

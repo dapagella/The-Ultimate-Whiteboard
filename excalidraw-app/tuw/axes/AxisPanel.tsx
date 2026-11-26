@@ -161,7 +161,7 @@ export const AxisPanel = () => {
         </>
       )}
       <div className="tuw-axis-panel__hint">
-        Doble clic en una letra para cambiarla.
+        Las letras de cada eje las escribís vos con la herramienta de texto (T).
       </div>
     </div>
   );
