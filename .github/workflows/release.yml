@@ -37,8 +37,16 @@ jobs:
       - run: yarn test:typecheck
       - run: yarn vitest run
 
-      - name: Compilar y publicar el instalador
-        run: yarn desktop:dist
+      - name: Compilar el instalador
+        run: yarn desktop:pack
+
+      # electron-builder a veces termina antes de subir todo: se publica con gh y se espera cada archivo
+      - name: Publicar en GitHub Releases
+        shell: bash
+        run: |
+          TAG="$GITHUB_REF_NAME"
+          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "${TAG#v}" --notes "Ver CHANGELOG.md"
+          gh release upload "$TAG" desktop/release/*.exe desktop/release/*.exe.blockmap desktop/release/latest.yml --clobber
         env:
           # token temporal que GitHub da a cada ejecución (no es un secreto guardado en el repo)
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
