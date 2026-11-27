@@ -17,11 +17,17 @@ import type { ExportRequest, ExportResult } from "./workspace/types";
 
 export const MAX_EXPORT_BYTES = 300 * 1024 * 1024;
 
-const EXT = { png: "png", svg: "svg", json: "excalidraw" } as const;
+const EXT = {
+  png: "png",
+  svg: "svg",
+  json: "excalidraw",
+  pdf: "pdf",
+} as const;
 const FILTER_NAME = {
   png: "Imagen PNG",
   svg: "Imagen SVG",
   json: "Hoja de Excalidraw",
+  pdf: "Documento PDF",
 } as const;
 
 const RESERVED = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])$/i;
@@ -52,7 +58,12 @@ export const decodeExport = (req: unknown): DecodedExport => {
   if (!r || typeof r !== "object") {
     return { ok: false, error: "Pedido de exportación inválido." };
   }
-  if (r.format !== "png" && r.format !== "svg" && r.format !== "json") {
+  if (
+    r.format !== "png" &&
+    r.format !== "svg" &&
+    r.format !== "json" &&
+    r.format !== "pdf"
+  ) {
     return { ok: false, error: "Formato no permitido." };
   }
   if (typeof r.content !== "string" || r.content.length === 0) {
@@ -62,7 +73,7 @@ export const decodeExport = (req: unknown): DecodedExport => {
     return { ok: false, error: "La exportación es demasiado grande." };
   }
   const bytes =
-    r.format === "png"
+    r.format === "png" || r.format === "pdf"
       ? Buffer.from(r.content, "base64")
       : Buffer.from(r.content, "utf8");
   if (bytes.length > MAX_EXPORT_BYTES) {
@@ -72,6 +83,13 @@ export const decodeExport = (req: unknown): DecodedExport => {
     const magic = [0x89, 0x50, 0x4e, 0x47];
     if (bytes.length < 8 || !magic.every((b, i) => bytes[i] === b)) {
       return { ok: false, error: "La imagen PNG generada no es válida." };
+    }
+  } else if (r.format === "pdf") {
+    if (
+      bytes.length < 64 ||
+      bytes.subarray(0, 5).toString("latin1") !== "%PDF-"
+    ) {
+      return { ok: false, error: "El PDF generado no es válido." };
     }
   } else if (r.format === "svg") {
     if (!/<svg[\s>]/i.test(bytes.subarray(0, 2048).toString("utf8"))) {

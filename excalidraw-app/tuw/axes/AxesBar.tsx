@@ -1,8 +1,15 @@
 import { CaptureUpdateAction, useExcalidrawAPI } from "@excalidraw/excalidraw";
+import { sheetGridSize } from "@excalidraw/excalidraw/scene/sheetBackground";
 import { useEffect, useState } from "react";
 
 import { DEFAULT_AXIS_STYLE, createAxisElements } from "./elements";
-import { axisTips, paramsFromDrag, rolesOf } from "./geometry";
+import {
+  axisTips,
+  paramsFromDrag,
+  rolesOf,
+  snapParamsToGrid,
+  snapPoint,
+} from "./geometry";
 
 import "./axes.scss";
 
@@ -39,19 +46,32 @@ export const AxesBar = () => {
     return null;
   }
 
-  const create = (dim: AxisDim, d: Drag) => {
+  /** Origen (en la hoja) y tamaño del eje para un arrastre, pegados a la cuadrícula si la hoja tiene. */
+  const resolve = (dim: AxisDim, d: Drag) => {
     const s = api.getAppState();
     const zoom = s.zoom.value;
     // de píxeles de pantalla a unidades de la hoja
-    const origin = {
+    let origin = {
       x: (d.x0 - s.offsetLeft) / zoom - s.scrollX,
       y: (d.y0 - s.offsetTop) / zoom - s.scrollY,
     };
-    const params: AxisParams = paramsFromDrag(
+    let params: AxisParams = paramsFromDrag(
       dim,
       (d.x1 - d.x0) / zoom,
       (d.y1 - d.y0) / zoom,
     );
+    const grid = s.gridModeEnabled
+      ? s.gridSize
+      : sheetGridSize(s.tuwBackground);
+    if (grid) {
+      origin = snapPoint(origin, grid);
+      params = snapParamsToGrid(dim, params, grid);
+    }
+    return { s, zoom, origin, params };
+  };
+
+  const create = (dim: AxisDim, d: Drag) => {
+    const { s, origin, params } = resolve(dim, d);
     const { elements, groupId } = createAxisElements(dim, origin, params, {
       ...DEFAULT_AXIS_STYLE,
       // el color de un preset de trazo (p. ej. el amarillo del resaltador) no se usa para los ejes
@@ -78,8 +98,11 @@ export const AxesBar = () => {
     if (!mode || !drag) {
       return null;
     }
-    const p = paramsFromDrag(mode, drag.x1 - drag.x0, drag.y1 - drag.y0);
-    const tips = axisTips(mode, p);
+    const { s, zoom, origin, params } = resolve(mode, drag);
+    // la vista previa va en píxeles de pantalla: origen ya pegado a la cuadrícula
+    const ox = (origin.x + s.scrollX) * zoom + s.offsetLeft;
+    const oy = (origin.y + s.scrollY) * zoom + s.offsetTop;
+    const tips = axisTips(mode, params);
     return (
       <svg className="tuw-axes__preview" aria-hidden="true">
         <defs>
@@ -100,10 +123,10 @@ export const AxesBar = () => {
           return (
             <line
               key={role}
-              x1={drag.x0}
-              y1={drag.y0}
-              x2={drag.x0 + t.x}
-              y2={drag.y0 + t.y}
+              x1={ox}
+              y1={oy}
+              x2={ox + t.x * zoom}
+              y2={oy + t.y * zoom}
               stroke="#6965db"
               strokeWidth={2}
               markerEnd="url(#tuw-axes-head)"

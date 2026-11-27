@@ -1,9 +1,10 @@
 import { useExcalidrawAPI } from "@excalidraw/excalidraw";
 import { Dialog } from "@excalidraw/excalidraw/components/Dialog";
-import { useState } from "react";
+import { useUIAppState } from "@excalidraw/excalidraw/context/ui-appState";
+import { useEffect, useState } from "react";
 
 import { useAtom } from "../../app-jotai";
-import { getTuw, unwrap } from "../workspace/desktopApi";
+import { getTuw, isDesktop, unwrap } from "../workspace/desktopApi";
 import { parseScene } from "../workspace/sceneFile";
 
 import { DEFAULT_EXPORT_OPTIONS, buildExportContent } from "./exportSheet";
@@ -23,6 +24,11 @@ const FORMATS: { value: ExportFormat; label: string; hint: string }[] = [
     value: "svg",
     label: "Imagen SVG",
     hint: "Vectorial: se puede agrandar sin perder calidad.",
+  },
+  {
+    value: "pdf",
+    label: "Documento PDF",
+    hint: "Una página con la hoja completa: para imprimir o enviar.",
   },
   {
     value: "json",
@@ -46,6 +52,20 @@ export const ExportDialog = () => {
     kind: "ok" | "error";
     text: string;
   } | null>(null);
+
+  const openDialog = useUIAppState().openDialog?.name;
+
+  // Ctrl+Shift+E y los diálogos de exportar del editor llevan al diálogo propio
+  useEffect(() => {
+    if (
+      api &&
+      isDesktop() &&
+      (openDialog === "imageExport" || openDialog === "jsonExport")
+    ) {
+      api.updateScene({ appState: { openDialog: null } as any });
+      setState({ path: null });
+    }
+  }, [api, openDialog, setState]);
 
   if (!state || !api) {
     return null;
@@ -139,7 +159,7 @@ export const ExportDialog = () => {
             Incluir el fondo de la hoja (color y cuadrícula/rayas)
           </label>
         )}
-        {opts.format === "png" && (
+        {(opts.format === "png" || opts.format === "pdf") && (
           <label className="tuw-export__check">
             Resolución{" "}
             <select

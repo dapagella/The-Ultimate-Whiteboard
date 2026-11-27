@@ -42,7 +42,7 @@ export type FetchedImage = {
 
 /** Exportar hoja: `content` es texto (svg/json) o base64 (png). */
 export type ExportRequest = {
-  format: "png" | "svg" | "json";
+  format: "png" | "svg" | "json" | "pdf";
   suggestedName: string;
   content: string;
 };

@@ -1,16 +1,21 @@
 import { useExcalidrawAPI } from "@excalidraw/excalidraw";
+import { sheetGridSize } from "@excalidraw/excalidraw/scene/sheetBackground";
 import { useEffect } from "react";
 
 import type { ExcalidrawFreeDrawElement } from "@excalidraw/element/types";
 
 import { appJotaiStore } from "../../app-jotai";
 
+import { snapPoint } from "../axes/geometry";
+
 import {
   HOLD_MS,
   HOLD_TOLERANCE_PX,
   canStraighten,
   isBarrelPressed,
+  isLineLike,
 } from "./penInput";
+
 import { penSettingsAtom } from "./penState";
 
 type Stroke = {
@@ -20,6 +25,12 @@ type Stroke = {
   last: { x: number; y: number; pressure: number };
   timer: number;
   snapped: boolean;
+  /** Recorrido del lápiz (pantalla): solo se endereza si ya parece una línea. */
+  path: { x: number; y: number }[];
+  /** Punto de la hoja donde empezó el trazo, antes de pegarlo a la cuadrícula. */
+  origin?: { x: number; y: number };
+  /** Última forma de la línea: se reaplica al soltar (el editor agrega un punto final suelto). */
+  fix?: { id: string; patch: Record<string, unknown> };
 };
 
 /**
@@ -50,17 +61,34 @@ export const StraightLineGuard = () => {
       if (!el || el.type !== "freedraw") {
         return false;
       }
-      const dx = (p.x - s.offsetLeft) / s.zoom.value - s.scrollX - el.x;
-      const dy = (p.y - s.offsetTop) / s.zoom.value - s.scrollY - el.y;
-      api.mutateElement(el, {
+      // dónde empezó el trazo (se guarda la 1.ª vez: después el elemento puede moverse al vértice)
+      const origin = (stroke!.origin ??= { x: el.x, y: el.y });
+      let start = origin;
+      let end = {
+        x: (p.x - s.offsetLeft) / s.zoom.value - s.scrollX,
+        y: (p.y - s.offsetTop) / s.zoom.value - s.scrollY,
+      };
+      // con cuadrícula en la hoja, los dos extremos se pegan al vértice más cercano
+      const grid = s.gridModeEnabled
+        ? s.gridSize
+        : sheetGridSize(s.tuwBackground);
+      if (grid) {
+        start = snapPoint(origin, grid);
+        end = snapPoint(end, grid);
+      }
+      const patch = {
+        x: start.x,
+        y: start.y,
         points: [
           [0, 0],
-          [dx, dy],
+          [end.x - start.x, end.y - start.y],
         ] as any,
         pressures: el.simulatePressure
           ? []
           : [el.pressures[0] ?? 0.5, p.pressure],
-      });
+      };
+      api.mutateElement(el, patch);
+      stroke!.fix = { id: el.id, patch };
       return true;
     };
 
@@ -68,7 +96,8 @@ export const StraightLineGuard = () => {
       if (
         !stroke ||
         stroke.snapped ||
-        !canStraighten(stroke.start, stroke.last)
+        !canStraighten(stroke.start, stroke.last) ||
+        !isLineLike(stroke.path)
       ) {
         return;
       }
@@ -87,11 +116,15 @@ export const StraightLineGuard = () => {
     const onDown = (ev: Event) => {
       const e = ev as PointerEvent;
       stop();
+      const settings = appJotaiStore.get(penSettingsAtom);
       if (
-        e.pointerType !== "pen" ||
+        !(
+          e.pointerType === "pen" ||
+          (settings.tabletAsMouse && e.pointerType === "mouse")
+        ) ||
         e.button > 0 ||
         isBarrelPressed(e) ||
-        !appJotaiStore.get(penSettingsAtom).straightHold ||
+        !settings.straightHold ||
         api.getAppState().activeTool.type !== "freedraw" ||
         !(e.target as HTMLElement | null)?.closest?.("canvas.interactive")
       ) {
@@ -105,6 +138,7 @@ export const StraightLineGuard = () => {
         last: { ...pt, pressure: e.pressure },
         timer: 0,
         snapped: false,
+        path: [pt],
       };
       armTimer();
     };
@@ -115,6 +149,12 @@ export const StraightLineGuard = () => {
         return;
       }
       stroke.last = { x: e.clientX, y: e.clientY, pressure: e.pressure };
+      if (!stroke.snapped) {
+        const prev = stroke.path[stroke.path.length - 1];
+        if (Math.hypot(e.clientX - prev.x, e.clientY - prev.y) >= 1) {
+          stroke.path.push({ x: e.clientX, y: e.clientY });
+        }
+      }
       if (stroke.snapped) {
         // la línea sigue al lápiz; el editor no agrega puntos al trazo
         e.stopImmediatePropagation();
@@ -132,13 +172,28 @@ export const StraightLineGuard = () => {
 
     window.addEventListener("pointerdown", onDown, true);
     window.addEventListener("pointermove", onMove, true);
-    window.addEventListener("pointerup", stop, true);
+    // al soltar, el editor suma un último punto con la posición real del lápiz: se deja la recta limpia
+    const onUp = () => {
+      const fix = stroke?.snapped ? stroke.fix : undefined;
+      stop();
+      if (fix) {
+        window.setTimeout(() => {
+          const el = api
+            .getSceneElementsIncludingDeleted()
+            .find((e) => e.id === fix.id);
+          if (el && el.type === "freedraw") {
+            api.mutateElement(el, fix.patch as any);
+          }
+        }, 0);
+      }
+    };
+    window.addEventListener("pointerup", onUp, true);
     window.addEventListener("pointercancel", stop, true);
     return () => {
       stop();
       window.removeEventListener("pointerdown", onDown, true);
       window.removeEventListener("pointermove", onMove, true);
-      window.removeEventListener("pointerup", stop, true);
+      window.removeEventListener("pointerup", onUp, true);
       window.removeEventListener("pointercancel", stop, true);
     };
   }, [api]);

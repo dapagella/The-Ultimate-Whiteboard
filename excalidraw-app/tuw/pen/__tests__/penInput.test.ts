@@ -13,6 +13,7 @@ import {
   normalizePenSettings,
   retargetFor,
   shouldRejectTouch,
+  isLineLike,
 } from "../penInput";
 
 const pen = (button: number, buttons: number) => ({
@@ -139,11 +140,13 @@ describe("normalizePenSettings", () => {
         barrel: "pan",
         rejectPalm: false,
         straightHold: false,
+        tabletAsMouse: true,
       }),
     ).toEqual({
       barrel: "pan",
       rejectPalm: false,
       straightHold: false,
+      tabletAsMouse: true,
     });
   });
 });
@@ -171,5 +174,39 @@ describe("línea recta al mantener quieto", () => {
     expect(canStraighten(o, { x: 3, y: 4 })).toBe(false);
     expect(canStraighten(o, { x: MIN_STRAIGHT_PX, y: 0 })).toBe(true);
     expect(canStraighten(o, { x: 30, y: 40 })).toBe(true);
+  });
+});
+
+describe("isLineLike (solo se endereza lo que ya parece una línea)", () => {
+  const line = Array.from({ length: 40 }, (_, i) => ({
+    x: i * 5,
+    y: Math.sin(i) * 3, // tiembla un poco
+  }));
+
+  it("una línea con temblor sí", () => {
+    expect(isLineLike(line)).toBe(true);
+  });
+
+  it("una letra o curva con pausa NO (escribir no se vuelve una recta)", () => {
+    const circle = Array.from({ length: 40 }, (_, i) => ({
+      x: 50 + Math.cos(i / 6) * 50,
+      y: 50 + Math.sin(i / 6) * 50,
+    }));
+    expect(isLineLike(circle)).toBe(false);
+    const hook = [
+      ...line.slice(0, 20),
+      ...Array.from({ length: 10 }, (_, i) => ({ x: 95, y: i * 8 })),
+    ];
+    expect(isLineLike(hook)).toBe(false);
+  });
+
+  it("demasiado corto o vacío no", () => {
+    expect(isLineLike([])).toBe(false);
+    expect(
+      isLineLike([
+        { x: 0, y: 0 },
+        { x: 3, y: 0 },
+      ]),
+    ).toBe(false);
   });
 });

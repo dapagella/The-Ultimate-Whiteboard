@@ -1,5 +1,5 @@
 /**
- * Arma el contenido de una hoja exportada (PNG / SVG / .excalidraw). Incluye fondo de la hoja,
+ * Arma el contenido de una hoja exportada (PNG / SVG / PDF / .excalidraw). Incluye fondo de la hoja,
  * resaltador (multiply), fórmulas e imágenes: usa el mismo render que la pantalla.
  */
 import { exportScene } from "@excalidraw/excalidraw";
@@ -10,6 +10,8 @@ import type { AppState, BinaryFiles } from "@excalidraw/excalidraw/types";
 import type { ExcalidrawElement } from "@excalidraw/element/types";
 
 import { serializeScene } from "../workspace/sceneFile";
+
+import { pngToPdf } from "./pdf";
 
 import type { ExportRequest } from "../../../desktop/src/api";
 
@@ -23,7 +25,7 @@ export type SheetData = {
 
 export type ExportOptions = {
   format: ExportFormat;
-  /** Resolución del PNG (1×, 2×, 3×). */
+  /** Resolución del PNG y del PDF (1×, 2×, 3×). */
   scale: 1 | 2 | 3;
   /** false = fondo transparente (PNG/SVG). */
   background: boolean;
@@ -81,6 +83,13 @@ export const buildExportContent = async (
       config: { ...config, scale: 1, embedScene: true },
     });
     return new XMLSerializer().serializeToString(svg);
+  }
+  if (opts.format === "pdf") {
+    // el PDF lleva siempre fondo (si no, saldría transparente = blanco igual) y sin datos embebidos
+    const png = await exportScene({ type: "png", data, config });
+    return blobToBase64(
+      new Blob([(await pngToPdf(png, opts.scale)) as BlobPart]),
+    );
   }
   const blob = await exportScene({
     type: "png",

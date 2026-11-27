@@ -1,5 +1,14 @@
 # Cambios
 
+## 0.1.3
+
+- Eje 3D: la diagonal va fija a 225° (ya no hay control de ángulo).
+- Cuadrícula: con fondo cuadriculado o punteado, las líneas rectas del lápiz, la herramienta de línea, las formas y los ejes se pegan al vértice más cercano.
+- Colores primarios fuertes (negro, rojo, azul, verde, amarillo, blanco) siempre a mano en la barra de trazos.
+- Línea recta con el lápiz: solo se endereza si el trazo ya iba casi recto; escribir o hacer curvas con una pausa ya no genera rayas.
+- Tabletas XP-Pen/Huion: ajuste «Mi tableta funciona como mouse» en ☰ → Lápiz y tableta.
+- Exportar: nuevo formato PDF, y "Exportar imagen" (menú y Ctrl+Shift+E) usa el diálogo propio de la app.
+
 ## 0.1.2
 
 - Línea recta con el lápiz: dibujando, si lo mantenés quieto ~0,5 s el trazo se endereza y sigue al lápiz hasta que lo levantás (se puede apagar en ☰ → Lápiz y tableta).

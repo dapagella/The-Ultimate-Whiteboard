@@ -3,13 +3,7 @@ import { useUIAppState } from "@excalidraw/excalidraw/context/ui-appState";
 import { useEffect, useState } from "react";
 
 import { axisIdFromSelection, readAxis, regenerateAxis } from "./elements";
-import {
-  DEFAULT_Z_ANGLE,
-  MAX_AXIS_LENGTH,
-  MAX_Z_ANGLE,
-  MIN_AXIS_LENGTH,
-  MIN_Z_ANGLE,
-} from "./geometry";
+import { DEFAULT_Z_ANGLE, MAX_AXIS_LENGTH, MIN_AXIS_LENGTH } from "./geometry";
 
 import "./axes.scss";
 
@@ -100,7 +94,8 @@ export const AxisPanel = () => {
       elements: regenerateAxis(
         api.getSceneElementsIncludingDeleted(),
         axisId,
-        patch,
+        // en 3D la diagonal siempre queda a 225° (también en ejes viejos al editarlos)
+        info.dim === 3 ? { ...patch, angleZDeg: DEFAULT_Z_ANGLE } : patch,
       ),
       captureUpdate: CaptureUpdateAction.IMMEDIATELY,
     });
@@ -137,26 +132,8 @@ export const AxisPanel = () => {
             onCommit={(n) => apply({ lengthZ: n })}
             testId="tuw-axis-lz"
           />
-          <div className="tuw-axis-panel__angle">
-            <NumberField
-              label="Ángulo Z"
-              value={p.angleZDeg!}
-              min={MIN_Z_ANGLE}
-              max={MAX_Z_ANGLE}
-              suffix="°"
-              onCommit={(n) => apply({ angleZDeg: n })}
-              testId="tuw-axis-angle"
-            />
-            <input
-              type="range"
-              min={MIN_Z_ANGLE}
-              max={MAX_Z_ANGLE}
-              step={1}
-              value={Math.round(p.angleZDeg ?? DEFAULT_Z_ANGLE)}
-              aria-label="Ángulo del eje Z"
-              data-testid="tuw-axis-angle-range"
-              onChange={(e) => apply({ angleZDeg: Number(e.target.value) })}
-            />
+          <div className="tuw-axis-panel__hint">
+            La diagonal va fija a {DEFAULT_Z_ANGLE}°.
           </div>
         </>
       )}

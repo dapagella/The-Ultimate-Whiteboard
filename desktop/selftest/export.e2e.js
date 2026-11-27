@@ -27,8 +27,8 @@
   await sleep(400);
 
   const out = {};
-  for (const fmt of ["png", "svg", "json"]) {
-    await clickMenu("Exportar hoja");
+  for (const fmt of ["png", "svg", "pdf", "json"]) {
+    await clickMenu("Exportar imagen o PDF");
     document.querySelector(`[data-testid="tuw-export-${fmt}"]`).click();
     await sleep(100);
     document.querySelector('[data-testid="tuw-export-go"]').click();
@@ -51,7 +51,7 @@
         svg: /^Guardado en: .*Hoja\.svg$/.test(out.svg),
         json: /^Guardado en: .*Hoja\.excalidraw$/.test(out.json),
       },
-      _raw: { _png: out.png, _svg: out.svg, _json: out.json },
+      _raw: { _png: out.png, _svg: out.svg, _pdf: out.pdf, _json: out.json },
     },
   };
 })();

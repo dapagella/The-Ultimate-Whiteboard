@@ -365,6 +365,7 @@ import {
 import { ElementCanvasButtons } from "../components/ElementCanvasButtons";
 import { LaserTrails } from "../laserTrails";
 import { withBatchedUpdates, withBatchedUpdatesThrottled } from "../reactUtils";
+import { sheetGridSize } from "../scene/sheetBackground";
 import { isOverScrollBars } from "../scene/scrollbars";
 import { LassoTrail } from "../lasso";
 import { EraserTrail } from "../eraser";
@@ -1506,8 +1507,15 @@ class App extends React.Component<AppProps, AppState> {
    * If disabled, returns null.
    */
   public getEffectiveGridSize = () => {
+    if (isGridModeEnabled(this)) {
+      return this.state.gridSize as NullableGridSize;
+    }
+    // TUW: con fondo cuadriculado/punteado, líneas, flechas y formas se pegan al vértice más
+    // cercano de la hoja (mover o escalar con la herramienta de selección sigue libre).
     return (
-      isGridModeEnabled(this) ? this.state.gridSize : null
+      this.state.activeTool.type !== "selection"
+        ? sheetGridSize(this.state.tuwBackground)
+        : null
     ) as NullableGridSize;
   };
 

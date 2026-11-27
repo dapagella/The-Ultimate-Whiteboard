@@ -24,6 +24,18 @@ export default (dir) => {
     if (w < 100 || h < 50) problems.push(`Hoja.png con tamaño raro ${w}x${h}`);
   }
 
+  const pdf = read("Hoja.pdf");
+  if (pdf) {
+    if (pdf.subarray(0, 5).toString("latin1") !== "%PDF-")
+      problems.push("Hoja.pdf no es un PDF");
+    if (!pdf.subarray(-16).toString("latin1").trimEnd().endsWith("%%EOF"))
+      problems.push("Hoja.pdf termina mal");
+    if (!pdf.toString("latin1").includes("/FlateDecode"))
+      problems.push("Hoja.pdf sin imagen");
+    if (pdf.length < 3000)
+      problems.push(`Hoja.pdf sospechosamente chico (${pdf.length} B)`);
+  }
+
   const svg = read("Hoja.svg")?.toString("utf8");
   if (svg) {
     if (!/<svg[\s>]/.test(svg)) problems.push("Hoja.svg no es un SVG");

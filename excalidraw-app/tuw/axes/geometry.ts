@@ -20,7 +20,8 @@ export type AxisParams = {
 /** El eje Z va "hacia abajo a la izquierda": entre 180° (horizontal, a la izquierda) y 270° (vertical, hacia abajo). */
 export const MIN_Z_ANGLE = 180;
 export const MAX_Z_ANGLE = 270;
-export const DEFAULT_Z_ANGLE = 210; // 30° bajo la horizontal: bien diagonal
+/** Ángulo fijo de la diagonal del eje 3D: 225° = 45° bajo la horizontal, hacia la izquierda. */
+export const DEFAULT_Z_ANGLE = 225;
 export const MIN_AXIS_LENGTH = 20;
 export const MAX_AXIS_LENGTH = 5000;
 export const DEFAULT_AXIS_LENGTH = 220;
@@ -98,6 +99,39 @@ export const tipToPolar = (tip: Vec): { angleDeg: number; length: number } => {
     angleDeg += 360;
   }
   return { angleDeg, length };
+};
+
+const snapTo = (v: number, grid: number) => Math.round(v / grid) * grid;
+
+/** Punto de la cuadrícula más cercano. */
+export const snapPoint = (p: Vec, grid: number): Vec => ({
+  x: snapTo(p.x, grid),
+  y: snapTo(p.y, grid),
+});
+
+/**
+ * Largos que hacen que cada flecha termine justo en un vértice de la cuadrícula: X e Y en
+ * múltiplos de la cuadrícula (mínimo una celda) y la diagonal en pasos que avanzan
+ * una cantidad entera de celdas en horizontal (a 225° también en vertical).
+ */
+export const snapParamsToGrid = (
+  dim: AxisDim,
+  params: AxisParams,
+  grid: number,
+): AxisParams => {
+  const p = normalizeParams(dim, params);
+  const cells = (len: number) => Math.max(1, Math.round(len / grid));
+  const out: AxisParams = {
+    lengthX: cells(p.lengthX) * grid,
+    lengthY: cells(p.lengthY) * grid,
+  };
+  if (dim === 3) {
+    const angle = p.angleZDeg!;
+    const cos = Math.max(Math.abs(Math.cos(rad(angle))), 1e-6);
+    out.angleZDeg = angle;
+    out.lengthZ = (cells(p.lengthZ! * cos) * grid) / cos;
+  }
+  return out;
 };
 
 /**

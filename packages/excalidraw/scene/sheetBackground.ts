@@ -64,6 +64,15 @@ export const normalizeSheetBackground = (value: unknown): SheetBackground => {
   };
 };
 
+/**
+ * Separación de la cuadrícula de la hoja a la que se pegan los trazos rectos y las formas
+ * (solo cuando el fondo es cuadriculado o punteado; en liso o rayado no hay vértices).
+ */
+export const sheetGridSize = (
+  bg: SheetBackground | null | undefined,
+): number | null =>
+  bg && (bg.type === "grid" || bg.type === "dots") ? bg.spacing : null;
+
 export const isSameSheetBackground = (
   a: SheetBackground,
   b: SheetBackground,

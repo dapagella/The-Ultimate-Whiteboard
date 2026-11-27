@@ -149,7 +149,7 @@ describe("letras opcionales", () => {
     expect(texts(elements).map((t) => t.text)).toEqual(["t"]);
   });
 
-  it("el eje Z por defecto es bien diagonal (30° bajo la horizontal), no vertical", () => {
+  it("el eje Z por defecto va fijo a 225° (45° bajo la horizontal)", () => {
     const { elements } = createAxisElements(
       3,
       { x: 0, y: 0 },
@@ -158,8 +158,8 @@ describe("letras opcionales", () => {
     const z = byRole(elements, "z") as ExcalidrawArrowElement;
     const [dx, dy] = z.points[1];
     const angleBelowHorizontal = (Math.atan2(dy, -dx) * 180) / Math.PI;
-    expect(angleBelowHorizontal).toBeCloseTo(30, 3);
-    expect(Math.abs(dx)).toBeGreaterThan(Math.abs(dy)); // más horizontal que vertical
+    expect(angleBelowHorizontal).toBeCloseTo(45, 3);
+    expect(Math.abs(dx)).toBeCloseTo(Math.abs(dy), 3);
   });
 });
 

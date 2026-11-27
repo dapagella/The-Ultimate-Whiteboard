@@ -19,6 +19,16 @@ import "./strokes.scss";
 
 import type { StrokePreset } from "./presets";
 
+/** Colores primarios fuertes, siempre a mano para el lápiz. */
+export const PRIMARY_COLORS: readonly { name: string; color: string }[] = [
+  { name: "Negro", color: "#000000" },
+  { name: "Rojo", color: "#ff0000" },
+  { name: "Azul", color: "#0000ff" },
+  { name: "Verde", color: "#00c000" },
+  { name: "Amarillo", color: "#ffe000" },
+  { name: "Blanco", color: "#ffffff" },
+];
+
 /** Muestra cómo se verá el trazo del preset (grosor, opacidad y color). */
 const Sample = ({ preset }: { preset: StrokePreset }) => (
   <svg width="40" height="20" viewBox="0 0 40 20" aria-hidden="true">
@@ -63,6 +73,13 @@ export const StrokePresetBar = () => {
   const clear = () => {
     api.updateScene({
       appState: { tuwStroke: DEFAULT_TUW_STROKE } as any,
+      captureUpdate: CaptureUpdateAction.NEVER,
+    });
+  };
+
+  const setColor = (color: string) => {
+    api.updateScene({
+      appState: { currentItemStrokeColor: color } as any,
       captureUpdate: CaptureUpdateAction.NEVER,
     });
   };
@@ -174,6 +191,27 @@ export const StrokePresetBar = () => {
           <span>Sin preset</span>
         </button>
       )}
+      <div
+        className="tuw-strokes__colors"
+        role="group"
+        aria-label="Colores primarios"
+      >
+        {PRIMARY_COLORS.map((c) => {
+          const on = appState.currentItemStrokeColor.toLowerCase() === c.color;
+          return (
+            <button
+              key={c.color}
+              className={`tuw-strokes__color${on ? " is-on" : ""}`}
+              data-testid={`tuw-color-${c.color.slice(1)}`}
+              style={{ background: c.color }}
+              title={c.name}
+              aria-label={c.name}
+              aria-pressed={on}
+              onClick={() => setColor(c.color)}
+            />
+          );
+        })}
+      </div>
       {message && (
         <div className="tuw-strokes__msg" role="status">
           {message}

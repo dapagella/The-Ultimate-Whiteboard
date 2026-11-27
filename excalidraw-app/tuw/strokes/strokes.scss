@@ -75,6 +75,28 @@
     line-height: 16px;
   }
 
+  &__colors {
+    display: flex;
+    flex-basis: 100%;
+    justify-content: center;
+    gap: 8px;
+    padding: 2px 0 4px;
+  }
+
+  &__color {
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border: 2px solid rgba(0, 0, 0, 0.35);
+    border-radius: 50%;
+    cursor: pointer;
+
+    &.is-on {
+      border-color: var(--color-primary, #6965db);
+      box-shadow: 0 0 0 3px var(--color-primary, #6965db);
+    }
+  }
+
   &__item:hover &__del {
     display: block;
   }

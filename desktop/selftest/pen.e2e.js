@@ -80,15 +80,15 @@
   canvas.dispatchEvent(pe("pen", "pointerup", 450, 608));
   await sleep(300);
 
-  // 2b) línea recta: trazo curvo, quieto 800 ms y se endereza hasta donde se levanta el lápiz
+  // 2b) línea recta: trazo casi recto (con temblor), quieto 800 ms y se endereza hasta donde se levanta el lápiz
   key("p");
   await sleep(150);
   canvas.dispatchEvent(pe("pen", "pointerdown", 700, 200));
   for (const [x, y] of [
-    [730, 230],
-    [760, 205],
-    [800, 240],
-    [840, 225],
+    [730, 203],
+    [760, 198],
+    [800, 204],
+    [840, 199],
   ]) {
     canvas.dispatchEvent(pe("pen", "pointermove", x, y));
     await sleep(30);
@@ -102,6 +102,24 @@
     await sleep(30);
   }
   canvas.dispatchEvent(pe("pen", "pointerup", 960, 330));
+  await sleep(300);
+
+  // 2c) escribir/curvas: una letra en U con pausa NO se endereza
+  key("p");
+  await sleep(150);
+  canvas.dispatchEvent(pe("pen", "pointerdown", 700, 400));
+  for (const [x, y] of [
+    [700, 440],
+    [740, 470],
+    [800, 470],
+    [840, 440],
+    [840, 400],
+  ]) {
+    canvas.dispatchEvent(pe("pen", "pointermove", x, y));
+    await sleep(30);
+  }
+  await sleep(800);
+  canvas.dispatchEvent(pe("pen", "pointerup", 840, 400));
   await sleep(300);
 
   // 3) rechazo de palma: con el lápiz cerca, el dedo se ignora (se mide con un clic de dedo sobre la hoja)
@@ -134,6 +152,7 @@
   const first = strokes[0];
   const second = strokes[1];
   const line = strokes[2];
+  const letter = strokes[3];
   let recta = false;
   if (line) {
     const p = line.points;
@@ -160,7 +179,13 @@
         segundoTrazoBorrado: !!second && second.isDeleted === true,
         primerTrazoIntacto: !!first && first.isDeleted === false,
       },
-      lineaRecta: { seEnderezo: recta },
+      lineaRecta: {
+        seEnderezo: recta,
+        letraNoSeEnderezo:
+          !!letter &&
+          letter.points.length > 4 &&
+          Math.max(...letter.points.map((q) => q[1])) > 30,
+      },
       ajustes: {
         porDefectoBorrar: defaultEraser,
         guardoMoverHoja: saved?.barrel === "pan" && saved?.rejectPalm === true,

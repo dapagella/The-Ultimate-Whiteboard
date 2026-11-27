@@ -66,13 +66,14 @@ export const AppMainMenu: React.FC<{
       )}
       <MainMenu.DefaultItems.LoadScene />
       <MainMenu.DefaultItems.SaveToActiveFile />
-      <MainMenu.DefaultItems.Export />
-      <MainMenu.DefaultItems.SaveAsImage />
+      {/* en la app de escritorio, exportar va por el diálogo propio (guarda con el diálogo del sistema) */}
+      {!isDesktop() && <MainMenu.DefaultItems.Export />}
+      {!isDesktop() && <MainMenu.DefaultItems.SaveAsImage />}
       {isDesktop() && (
         <MainMenu.Item
           onSelect={() => appJotaiStore.set(exportDialogAtom, { path: null })}
         >
-          Exportar hoja…
+          Exportar imagen o PDF…
         </MainMenu.Item>
       )}
       <MainMenu.Item

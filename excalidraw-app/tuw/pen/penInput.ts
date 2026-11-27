@@ -22,12 +22,15 @@ export type PenSettings = {
   rejectPalm: boolean;
   /** Dibujando con el lápiz, si lo mantenés quieto un momento el trazo se vuelve una línea recta. */
   straightHold: boolean;
+  /** Tabletas (XP-Pen, etc.) que sin Windows Ink llegan como mouse: la línea recta también vale para el mouse. */
+  tabletAsMouse: boolean;
 };
 
 export const DEFAULT_PEN_SETTINGS: PenSettings = {
   barrel: "eraser", // Q20
   rejectPalm: true,
   straightHold: true,
+  tabletAsMouse: false,
 };
 
 export const normalizePenSettings = (raw: unknown): PenSettings => {
@@ -44,6 +47,10 @@ export const normalizePenSettings = (raw: unknown): PenSettings => {
       typeof r.straightHold === "boolean"
         ? r.straightHold
         : DEFAULT_PEN_SETTINGS.straightHold,
+    tabletAsMouse:
+      typeof r.tabletAsMouse === "boolean"
+        ? r.tabletAsMouse
+        : DEFAULT_PEN_SETTINGS.tabletAsMouse,
   };
 };
 
@@ -58,6 +65,40 @@ export const canStraighten = (
   start: { x: number; y: number },
   now: { x: number; y: number },
 ) => Math.hypot(now.x - start.x, now.y - start.y) >= MIN_STRAIGHT_PX;
+
+/** Separación máxima del trazo respecto de la recta, como fracción del largo (y mínimo en px). */
+export const LINE_LIKE_DEVIATION = 0.12;
+export const LINE_LIKE_MIN_DEVIATION_PX = 10;
+
+/**
+ * ¿El trazo hecho hasta ahora ya parece una línea (aunque tiemble un poco)? Solo así se endereza:
+ * escribir o dibujar curvas y hacer una pausa NO tiene que convertirse en una recta.
+ */
+export const isLineLike = (
+  pts: readonly { x: number; y: number }[],
+): boolean => {
+  if (pts.length < 2) {
+    return false;
+  }
+  const a = pts[0];
+  const b = pts[pts.length - 1];
+  const chord = Math.hypot(b.x - a.x, b.y - a.y);
+  if (chord < MIN_STRAIGHT_PX) {
+    return false;
+  }
+  let maxDev = 0;
+  for (const p of pts) {
+    // distancia del punto a la recta a–b
+    const d =
+      Math.abs((b.x - a.x) * (a.y - p.y) - (a.x - p.x) * (b.y - a.y)) / chord;
+    if (d > maxDev) {
+      maxDev = d;
+    }
+  }
+  return (
+    maxDev <= Math.max(LINE_LIKE_MIN_DEVIATION_PX, chord * LINE_LIKE_DEVIATION)
+  );
+};
 
 export type PointerLike = {
   pointerType: string;

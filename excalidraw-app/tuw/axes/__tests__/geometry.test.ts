@@ -13,6 +13,8 @@ import {
   normalizeParams,
   paramsFromDrag,
   rolesOf,
+  snapParamsToGrid,
+  snapPoint,
   tipToPolar,
 } from "../geometry";
 
@@ -203,5 +205,34 @@ describe("paramsFromDrag", () => {
     const p = paramsFromDrag(3, 400, 300);
     expect(p.lengthZ).toBeCloseTo(400 * DEFAULT_Z_RATIO);
     expect(p.angleZDeg).toBe(DEFAULT_Z_ANGLE);
+  });
+});
+
+describe("pegado a la cuadrícula", () => {
+  it("el eje diagonal por defecto va a 225°", () => {
+    expect(DEFAULT_Z_ANGLE).toBe(225);
+  });
+
+  it("snapPoint elige el vértice más cercano", () => {
+    expect(snapPoint({ x: 29, y: 31 }, 24)).toEqual({ x: 24, y: 24 });
+    expect(snapPoint({ x: 37, y: -13 }, 24)).toEqual({ x: 48, y: -24 });
+  });
+
+  it("los largos quedan en múltiplos de la cuadrícula (mínimo una celda)", () => {
+    const p = snapParamsToGrid(2, { lengthX: 130, lengthY: 5 }, 24);
+    expect(p.lengthX).toBe(120);
+    expect(p.lengthY).toBe(24);
+  });
+
+  it("la diagonal a 225° termina justo en un vértice", () => {
+    const g = 24;
+    const p = snapParamsToGrid(
+      3,
+      { lengthX: 200, lengthY: 200, lengthZ: 150, angleZDeg: 225 },
+      g,
+    );
+    const z = axisTips(3, p).z!;
+    close(Math.abs(z.x) % g < 1e-6 ? 0 : g - (Math.abs(z.x) % g), 0, 6);
+    close(Math.abs(z.x), Math.abs(z.y), 6);
   });
 });
