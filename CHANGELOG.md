@@ -1,5 +1,9 @@
 # Cambios
 
+## 0.1.6
+
+- El panel del costado es un poco más ancho para que entren los seis colores primarios y el color actual.
+
 ## 0.1.5
 
 - Colores primarios fuertes (negro, blanco, rojo, azul, verde, amarillo) en el panel del costado, tal cual también en el tema oscuro; se sacó la fila de colores del menú central.
