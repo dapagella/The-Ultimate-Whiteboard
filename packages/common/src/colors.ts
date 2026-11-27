@@ -236,13 +236,28 @@ const COMMON_ELEMENT_SHADES = pick(COLOR_PALETTE, [
 export const COLOR_TOP_PICKS_SLOTS = 5;
 
 // ORDER matters for positioning in quick picker
-export const DEFAULT_ELEMENT_STROKE_PICKS = [
-  COLOR_PALETTE.black,
-  COLOR_PALETTE.red[DEFAULT_ELEMENT_STROKE_COLOR_INDEX],
-  COLOR_PALETTE.green[DEFAULT_ELEMENT_STROKE_COLOR_INDEX],
-  COLOR_PALETTE.blue[DEFAULT_ELEMENT_STROKE_COLOR_INDEX],
-  COLOR_PALETTE.yellow[DEFAULT_ELEMENT_STROKE_COLOR_INDEX],
-] as ColorTuple;
+/** TUW: colores primarios fuertes del trazo (se ven tal cual, también en el tema oscuro). */
+export const PRIMARY_STROKE_COLORS = [
+  "#000000",
+  "#ffffff",
+  "#ff0000",
+  "#0000ff",
+  "#00c000",
+  "#ffe000",
+] as const;
+
+export const DEFAULT_ELEMENT_STROKE_PICKS: readonly string[] =
+  PRIMARY_STROKE_COLORS;
+
+/** Como applyDarkModeFilter, pero los colores primarios del trazo no se alteran. */
+export const applyStrokeDarkModeFilter = (
+  color: string,
+  enable = true,
+): string =>
+  enable &&
+  (PRIMARY_STROKE_COLORS as readonly string[]).includes(color.toLowerCase())
+    ? color
+    : applyDarkModeFilter(color, enable);
 
 // ORDER matters for positioning in quick picker
 export const DEFAULT_ELEMENT_BACKGROUND_PICKS = [
@@ -267,8 +282,13 @@ export const BUCKET_FILL_BACKGROUND_PICKS = [
 // sticky notes are their own color domain (own defaults, own picks)
 export const DEFAULT_STICKY_NOTE_BG = "#ffdf6b";
 
-export const STICKY_NOTE_STROKE_PICKS: ColorTuple =
-  DEFAULT_ELEMENT_STROKE_PICKS;
+export const STICKY_NOTE_STROKE_PICKS = [
+  COLOR_PALETTE.black,
+  COLOR_PALETTE.red[DEFAULT_ELEMENT_STROKE_COLOR_INDEX],
+  COLOR_PALETTE.green[DEFAULT_ELEMENT_STROKE_COLOR_INDEX],
+  COLOR_PALETTE.blue[DEFAULT_ELEMENT_STROKE_COLOR_INDEX],
+  COLOR_PALETTE.yellow[DEFAULT_ELEMENT_STROKE_COLOR_INDEX],
+] as ColorTuple;
 
 // ORDER matters for positioning in quick picker. Classic note colors; the
 // first one is `DEFAULT_STICKY_NOTE_BG`. Never transparent.

@@ -105,26 +105,6 @@ export const PenDialog = () => {
           </span>
         </label>
 
-        <label className="tuw-pen__row">
-          <input
-            type="checkbox"
-            data-testid="tuw-pen-asmouse"
-            checked={settings.tabletAsMouse}
-            onChange={(e) =>
-              savePenSettings({ ...settings, tabletAsMouse: e.target.checked })
-            }
-          />
-          <span>
-            <b>Mi tableta funciona como mouse (XP-Pen, Huion…)</b>
-            <small>
-              Si el driver no usa Windows Ink el lápiz llega como mouse, sin
-              presión ni botones. Activalo para que la línea recta funcione
-              igual. Lo ideal es activar «Windows Ink» en el driver de la
-              tableta.
-            </small>
-          </span>
-        </label>
-
         <div className="tuw-pen__section">
           <div className="tuw-pen__label">Botón del costado del lápiz</div>
           {BARREL_ACTIONS.map((a) => (

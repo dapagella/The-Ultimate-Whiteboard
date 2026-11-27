@@ -346,18 +346,20 @@ describe("sticky notes", () => {
         width: 100,
         height: 100,
       });
+      // TUW: el selector del trazo usa los colores primarios fuertes
+      const PRIMARY_RED = "#ff0000";
       API.setElements([note, label, rectangle]);
       layoutNotes(note.id);
       API.setSelectedElements([getElement(note.id), getElement(rectangle.id)]);
 
-      UI.clickOnTestId(`color-top-pick-${RED}`);
+      UI.clickOnTestId(`color-top-pick-${PRIMARY_RED}`);
 
-      expect(getElement(rectangle.id).strokeColor).toBe(RED);
-      expect(getElement(note.id).strokeColor).toBe(RED);
+      expect(getElement(rectangle.id).strokeColor).toBe(PRIMARY_RED);
+      expect(getElement(note.id).strokeColor).toBe(PRIMARY_RED);
       // the note's visible text is its label
-      expect(getElement(label.id).strokeColor).toBe(RED);
-      expect(h.state.currentItemStrokeColor).toBe(RED);
-      expect(h.state.currentItemStickynoteStrokeColor).toBe(RED);
+      expect(getElement(label.id).strokeColor).toBe(PRIMARY_RED);
+      expect(h.state.currentItemStrokeColor).toBe(PRIMARY_RED);
+      expect(h.state.currentItemStickynoteStrokeColor).toBe(PRIMARY_RED);
     });
 
     it("creates notes from the sticky defaults, not the shape defaults", async () => {

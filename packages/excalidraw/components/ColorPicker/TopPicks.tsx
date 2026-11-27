@@ -2,6 +2,7 @@ import clsx from "clsx";
 
 import {
   applyDarkModeFilter,
+  applyStrokeDarkModeFilter,
   COLOR_OUTLINE_CONTRAST_THRESHOLD,
   DEFAULT_CANVAS_BACKGROUND_PICKS,
   DEFAULT_ELEMENT_BACKGROUND_PICKS,
@@ -86,7 +87,11 @@ export const TopPicks = ({
         {dragState && <TopPicksDnDOutline />}
         {colors.map((color: string, index: number) => {
           const reorderOffset = getTopPickReorderOffset(dragState, index);
-          const displayColor = applyDarkModeFilter(color, theme === THEME.DARK);
+          const displayColor = (
+            type === "elementStroke"
+              ? applyStrokeDarkModeFilter
+              : applyDarkModeFilter
+          )(color, theme === THEME.DARK);
           return (
             <button
               className={clsx("color-picker__button top-picks-dnd__pick", {

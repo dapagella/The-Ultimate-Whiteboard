@@ -4,6 +4,7 @@ import { memo, useRef, useEffect } from "react";
 
 import {
   applyDarkModeFilter,
+  applyStrokeDarkModeFilter,
   COLOR_OUTLINE_CONTRAST_THRESHOLD,
   COLOR_PALETTE,
   DEFAULT_ELEMENT_BACKGROUND_PICKS,
@@ -13,7 +14,7 @@ import {
   THEME,
 } from "@excalidraw/common";
 
-import type { ColorTuple, ColorPaletteCustom } from "@excalidraw/common";
+import type { ColorPaletteCustom } from "@excalidraw/common";
 
 import type { ExcalidrawElement, Theme } from "@excalidraw/element/types";
 
@@ -59,7 +60,7 @@ interface ColorPickerProps {
   elements: readonly ExcalidrawElement[];
   appState: UIAppState;
   palette?: ColorPaletteCustom | null;
-  topPicks?: ColorTuple;
+  topPicks?: readonly string[];
   updateData: (formData?: any) => void;
   /** palette colors to hide from the popup, keeping hotkey positions */
   excludedColors?: readonly string[];
@@ -287,7 +288,10 @@ const ColorPickerTrigger = ({
   const isMobileMode = stylesPanelMode === "mobile";
   const dnd = useColorPickerDnD();
   const displayColor = color
-    ? applyDarkModeFilter(color, theme === THEME.DARK)
+    ? (mode === "stroke" ? applyStrokeDarkModeFilter : applyDarkModeFilter)(
+        color,
+        theme === THEME.DARK,
+      )
     : null;
   const handleClick = (e: React.MouseEvent) => {
     // use pointerdown so we run before outside-close logic

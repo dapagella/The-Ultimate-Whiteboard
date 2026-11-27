@@ -64,17 +64,16 @@ export const StraightLineGuard = () => {
       // dónde empezó el trazo (se guarda la 1.ª vez: después el elemento puede moverse al vértice)
       const origin = (stroke!.origin ??= { x: el.x, y: el.y });
       let start = origin;
-      let end = {
+      const end = {
         x: (p.x - s.offsetLeft) / s.zoom.value - s.scrollX,
         y: (p.y - s.offsetTop) / s.zoom.value - s.scrollY,
       };
-      // con cuadrícula en la hoja, los dos extremos se pegan al vértice más cercano
+      // con cuadrícula en la hoja, solo el punto inicial se pega al vértice más cercano
       const grid = s.gridModeEnabled
         ? s.gridSize
         : sheetGridSize(s.tuwBackground);
       if (grid) {
         start = snapPoint(origin, grid);
-        end = snapPoint(end, grid);
       }
       const patch = {
         x: start.x,
@@ -118,10 +117,7 @@ export const StraightLineGuard = () => {
       stop();
       const settings = appJotaiStore.get(penSettingsAtom);
       if (
-        !(
-          e.pointerType === "pen" ||
-          (settings.tabletAsMouse && e.pointerType === "mouse")
-        ) ||
+        (e.pointerType !== "pen" && e.pointerType !== "mouse") ||
         e.button > 0 ||
         isBarrelPressed(e) ||
         !settings.straightHold ||

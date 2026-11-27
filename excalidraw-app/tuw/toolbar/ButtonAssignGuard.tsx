@@ -10,18 +10,13 @@ import { useEffect } from "react";
 const ON_CANVAS = "canvas.interactive";
 const SELF = Symbol("tuw-assigned-button");
 
-type Session = {
-  id: number;
-  prevTool: string;
-  /** false mientras el editor termina de cambiar de herramienta. */
-  started: boolean;
-  last: PointerEvent;
-};
+type Held = { prevTool: string };
 
 /**
  * Botones del lápiz/mouse asignados a funciones de la barra (clic derecho sobre el botón → «Asignar un
- * botón…»). Si la función es una herramienta (p. ej. la manito), se usa mientras el botón está apretado
- * y al soltar se vuelve a la anterior; si es otra cosa (eje, fórmula…), se ejecuta al apretar.
+ * botón…»). Si la función es una herramienta (p. ej. la manito) se activa al apretar el botón y funciona
+ * exactamente como siempre; al soltarlo se vuelve a la herramienta anterior. Si es otra cosa (eje,
+ * fórmula…), se ejecuta una vez al apretar.
  */
 export const ButtonAssignGuard = () => {
   const api = useExcalidrawAPI();
@@ -30,20 +25,33 @@ export const ButtonAssignGuard = () => {
     if (!api) {
       return;
     }
-    let session: Session | null = null;
+    let held: Held | null = null;
+    let tipDown = false; // el editor ya recibió el toque de la punta
     let firedFor: number | null = null; // pointerId de una acción de un solo toque ya ejecutada
 
     const onCanvas = (e: Event) =>
       !!(e.target as HTMLElement | null)?.closest?.(ON_CANVAS);
 
-    /** Evento "disfrazado": el editor lo ve como un toque normal (botón principal). */
-    const synth = (
-      e: PointerEvent,
-      type: string,
-      button: number,
-      buttons: number,
-    ) => {
-      const c = new PointerEvent(type, {
+    const suppress = (e: Event) => {
+      e.stopImmediatePropagation();
+      e.preventDefault();
+    };
+
+    const hasContact = (e: PointerEvent) =>
+      e.pointerType === "pen" ? (e.buttons & 1) !== 0 || e.pressure > 0 : true;
+
+    const release = () => {
+      if (held) {
+        const prev = held.prevTool;
+        held = null;
+        // después de que el editor procese el pointerup
+        window.setTimeout(() => api.setActiveTool({ type: prev as any }), 0);
+      }
+    };
+
+    /** Un único pointerdown "limpio" (botón principal) para que el editor arranque con la nueva herramienta. */
+    const replayDown = (e: PointerEvent) => {
+      const c = new PointerEvent("pointerdown", {
         bubbles: true,
         cancelable: true,
         composed: true,
@@ -54,31 +62,14 @@ export const ButtonAssignGuard = () => {
         pointerId: e.pointerId,
         pointerType: e.pointerType,
         isPrimary: e.isPrimary,
-        pressure: buttons ? Math.max(e.pressure, 0.5) : 0,
+        pressure: Math.max(e.pressure, 0.5),
         tiltX: e.tiltX,
         tiltY: e.tiltY,
-        button,
-        buttons,
+        button: 0,
+        buttons: 1,
       });
       (c as any)[SELF] = true;
-      return c;
-    };
-
-    const suppress = (e: Event) => {
-      e.stopImmediatePropagation();
-      e.preventDefault();
-    };
-
-    const hasContact = (e: PointerEvent) =>
-      e.pointerType === "pen" ? (e.buttons & 1) !== 0 || e.pressure > 0 : true;
-
-    const finish = (e: PointerEvent) => {
-      const s = session!;
-      session = null;
-      if (s.started) {
-        (e.target as EventTarget).dispatchEvent(synth(e, "pointerup", 0, 0));
-      }
-      api.setActiveTool({ type: s.prevTool as any });
+      (e.target as EventTarget).dispatchEvent(c);
     };
 
     const onPointer = (ev: Event) => {
@@ -86,25 +77,24 @@ export const ButtonAssignGuard = () => {
       if ((e as any)[SELF]) {
         return;
       }
+      const hit = findAssignment(getToolbarAssignments(), e);
 
-      if (session) {
-        if (e.pointerId !== session.id) {
+      if (held) {
+        // soltó el botón y no hay punta apoyada (o se canceló): vuelve la herramienta anterior
+        if (e.type === "pointercancel" || (!hit && !hasContact(e))) {
+          tipDown = false;
+          release();
           return;
         }
-        suppress(e);
-        const lifted =
-          e.type === "pointerup" ||
-          e.type === "pointercancel" ||
-          (e.pointerType === "pen" && !hasContact(e)) ||
-          (e.pointerType !== "pen" && e.buttons === 0);
-        if (lifted) {
-          finish(e);
-        } else if (session.started) {
-          (e.target as EventTarget).dispatchEvent(
-            synth(e, "pointermove", -1, 1),
-          );
-        } else {
-          session.last = e;
+        if (!hasContact(e)) {
+          tipDown = false;
+        } else if (!tipDown) {
+          // la punta se apoyó con el botón ya apretado: el navegador no manda un "pointerdown"
+          tipDown = true;
+          if (e.type !== "pointerdown") {
+            suppress(e);
+            replayDown(e);
+          }
         }
         return;
       }
@@ -115,38 +105,34 @@ export const ButtonAssignGuard = () => {
         }
         return;
       }
-      if (e.type !== "pointerdown" && e.type !== "pointermove") {
-        return;
-      }
-      const hit = findAssignment(getToolbarAssignments(), e);
-      if (!hit || !hasContact(e) || !onCanvas(e)) {
+      if (
+        !hit ||
+        (e.type !== "pointerdown" && e.type !== "pointermove") ||
+        !onCanvas(e)
+      ) {
         return;
       }
 
-      suppress(e);
       if (isNativeToolId(hit.itemId)) {
         const prev = api.getAppState().activeTool.type;
+        if (prev === hit.itemId) {
+          return;
+        }
+        held = { prevTool: prev };
+        tipDown = e.type === "pointerdown" && hasContact(e);
         api.setActiveTool({ type: hit.itemId });
-        const s: Session = {
-          id: e.pointerId,
-          prevTool: prev,
-          started: false,
-          last: e,
-        };
-        session = s;
-        // el editor cambia de herramienta de forma asíncrona: se empieza recién cuando ya cambió
-        window.setTimeout(() => {
-          if (session === s) {
-            s.started = true;
-            (s.last.target as EventTarget).dispatchEvent(
-              synth(s.last, "pointerdown", 0, 1),
-            );
+        if (e.type === "pointerdown") {
+          // el editor todavía no cambió de herramienta: se repite el toque ya limpio
+          suppress(e);
+          if (hasContact(e)) {
+            window.setTimeout(() => replayDown(e), 0);
           }
-        }, 0);
+        }
         return;
       }
 
       // acción de un solo toque (ejes, fórmula…)
+      suppress(e);
       if (firedFor !== e.pointerId) {
         firedFor = e.pointerId;
         getHostToolbarItem(hit.itemId)?.onSelect();
@@ -158,7 +144,7 @@ export const ButtonAssignGuard = () => {
       const pe = e as PointerEvent;
       if (
         onCanvas(e) &&
-        (session ||
+        (held ||
           (pe.pointerType === "pen" &&
             Object.keys(getToolbarAssignments()).includes("pen:2")))
       ) {
@@ -177,7 +163,7 @@ export const ButtonAssignGuard = () => {
     return () => {
       types.forEach((t) => window.removeEventListener(t, onPointer, true));
       window.removeEventListener("contextmenu", onContextMenu, true);
-      session = null;
+      held = null;
     };
   }, [api]);
 

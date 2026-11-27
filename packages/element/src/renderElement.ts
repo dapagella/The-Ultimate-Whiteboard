@@ -24,6 +24,7 @@ import {
   getVerticalOffset,
   invariant,
   applyDarkModeFilter,
+  applyStrokeDarkModeFilter,
   isSafari,
   STICKY_NOTE_EDGE_SHADOW_OPACITY,
   STICKY_NOTE_EDGE_SHADOW_WIDTH,
@@ -490,7 +491,7 @@ const drawElementOnCanvas = (
           context.font = `${STICKY_NOTE_FOOTER.fontSize}px ${STICKY_NOTE_FOOTER.fontFamily}`;
           context.textAlign = "right";
           context.textBaseline = "alphabetic";
-          context.fillStyle = applyDarkModeFilter(
+          context.fillStyle = applyStrokeDarkModeFilter(
             element.strokeColor,
             renderConfig.theme === THEME.DARK,
           );
@@ -534,7 +535,7 @@ const drawElementOnCanvas = (
 
         for (const shape of shapes) {
           if (typeof shape === "string") {
-            context.fillStyle = applyDarkModeFilter(
+            context.fillStyle = applyStrokeDarkModeFilter(
               element.strokeColor,
               renderConfig.theme === THEME.DARK,
             );
@@ -681,7 +682,7 @@ const drawElementOnCanvas = (
         }
         withSavedContext(context, () => {
           context.font = getFontString(element);
-          context.fillStyle = applyDarkModeFilter(
+          context.fillStyle = applyStrokeDarkModeFilter(
             element.strokeColor,
             renderConfig.theme === THEME.DARK,
           );

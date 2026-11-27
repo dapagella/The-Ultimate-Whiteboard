@@ -1,5 +1,11 @@
 # Cambios
 
+## 0.1.5
+
+- Colores primarios fuertes (negro, blanco, rojo, azul, verde, amarillo) en el panel del costado, tal cual también en el tema oscuro; se sacó la fila de colores del menú central.
+- Línea recta al mantener quieto: también con el mouse, y solo el punto inicial se pega a la cuadrícula.
+- Botón del lápiz asignado a la manito: ahora activa la manito normal (sin eventos simulados), así se mueve fluido.
+
 ## 0.1.4
 
 - Barra de funciones personalizable: ejes 2D/3D, fórmula, imagen por URL y selección de lazo ya están arriba (se sacaron las barras de abajo). Clic derecho sobre un botón: quitarlo de la barra, moverlo, o asignarle un botón del lápiz/mouse. Lo que no está fijado queda en ⋮ (con 📌 para fijarlo). También se puede arrastrar para ordenar.
