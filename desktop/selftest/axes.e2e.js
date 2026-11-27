@@ -16,7 +16,7 @@
       bubbles: true,
       cancelable: true,
     });
-  document.querySelector('[data-testid="tuw-axes-3d"]').click();
+  document.querySelector('[data-testid="toolbar-axes3d"]').click();
   await sleep(200);
   const ov = document.querySelector('[data-testid="tuw-axes-overlay"]');
   if (!ov) {

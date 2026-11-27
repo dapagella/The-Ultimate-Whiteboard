@@ -1,3 +1,4 @@
+import { findAssignment, getToolbarAssignments } from "@excalidraw/excalidraw";
 import { useEffect } from "react";
 
 import { appJotaiStore } from "../../app-jotai";
@@ -91,6 +92,10 @@ export const PenGuard = () => {
 
       // 2) botón del costado
       if (!onCanvas(e) || !isPen(e)) {
+        return;
+      }
+      // un botón asignado a una función de la barra lo maneja ButtonAssignGuard
+      if (!session && findAssignment(getToolbarAssignments(), e)) {
         return;
       }
       if (e.type === "pointerdown") {

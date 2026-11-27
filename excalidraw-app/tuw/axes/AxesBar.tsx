@@ -2,6 +2,10 @@ import { CaptureUpdateAction, useExcalidrawAPI } from "@excalidraw/excalidraw";
 import { sheetGridSize } from "@excalidraw/excalidraw/scene/sheetBackground";
 import { useEffect, useState } from "react";
 
+import { useAtom } from "../../app-jotai";
+
+import { axesModeAtom } from "./axesState";
+
 import { DEFAULT_AXIS_STYLE, createAxisElements } from "./elements";
 import {
   axisTips,
@@ -25,7 +29,7 @@ const HEX = /^#[0-9a-f]{6}$/i;
  */
 export const AxesBar = () => {
   const api = useExcalidrawAPI();
-  const [mode, setMode] = useState<AxisDim | null>(null);
+  const [mode, setMode] = useAtom(axesModeAtom);
   const [drag, setDrag] = useState<Drag | null>(null);
 
   useEffect(() => {
@@ -40,7 +44,7 @@ export const AxesBar = () => {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [mode]);
+  }, [mode, setMode]);
 
   if (!api) {
     return null;
@@ -139,34 +143,6 @@ export const AxesBar = () => {
 
   return (
     <>
-      <div
-        className="tuw-axes"
-        data-testid="tuw-axes"
-        role="toolbar"
-        aria-label="Ejes"
-      >
-        <span className="tuw-axes__title">Ejes</span>
-        {([2, 3] as const).map((dim) => (
-          <button
-            key={dim}
-            className={`tuw-axes__btn${mode === dim ? " is-on" : ""}`}
-            data-testid={`tuw-axes-${dim}d`}
-            aria-pressed={mode === dim}
-            title={
-              dim === 2
-                ? "Eje 2D: clic para colocar, o arrastrá para elegir el tamaño"
-                : "Eje 3D: clic para colocar, o arrastrá para elegir el tamaño"
-            }
-            onClick={() => {
-              setDrag(null);
-              setMode(mode === dim ? null : dim);
-            }}
-          >
-            Eje {dim}D
-          </button>
-        ))}
-      </div>
-
       {mode && (
         <div
           className="tuw-axes__overlay"

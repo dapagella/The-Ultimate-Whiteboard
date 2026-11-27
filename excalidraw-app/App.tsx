@@ -111,6 +111,9 @@ import { StraightLineGuard } from "./tuw/pen/StraightLineGuard";
 import { ImageUrlDialog } from "./tuw/content/ImageUrlDialog";
 import { LatexDialog } from "./tuw/content/LatexDialog";
 import { StrokePresetBar } from "./tuw/strokes/StrokePresetBar";
+import { ButtonAssignGuard } from "./tuw/toolbar/ButtonAssignGuard";
+import { ToolbarItems } from "./tuw/toolbar/ToolbarItems";
+import { UiChrome, UiScaleDialog } from "./tuw/ui/UiChrome";
 import { getTuw, isDesktop } from "./tuw/workspace/desktopApi";
 import { serializeScene } from "./tuw/workspace/sceneFile";
 import { getSheetSession, setSessionEvents } from "./tuw/workspace/session";
@@ -790,6 +793,10 @@ const ExcalidrawWrapper = () => {
         <AxesBar />
         <AxisPanel />
         <ContentBar />
+        <ToolbarItems />
+        <ButtonAssignGuard />
+        <UiChrome />
+        <UiScaleDialog />
         <PenGuard />
         <StraightLineGuard />
         <PenDialog />

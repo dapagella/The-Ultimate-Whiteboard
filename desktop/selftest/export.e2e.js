@@ -12,7 +12,7 @@
   };
 
   // contenido: una fórmula y fondo cuadriculado amarillo
-  document.querySelector('[data-testid="tuw-insert-latex"]').click();
+  document.querySelector('[data-testid="toolbar-latex"]').click();
   await sleep(1500);
   document.querySelector('[data-testid="tuw-latex-accept"]').click();
   await sleep(800);

@@ -35,7 +35,7 @@
   };
 
   // 2) por la interfaz: botón "Imagen URL"
-  document.querySelector('[data-testid="tuw-insert-url"]').click();
+  document.querySelector('[data-testid="toolbar-imageurl"]').click();
   await sleep(300);
   const input = document.querySelector('[data-testid="tuw-imageurl-input"]');
   Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value").set.call(
@@ -51,7 +51,7 @@
   );
 
   // 3) por la interfaz: fórmula de ejemplo (\int_0^1 x^2\,dx)
-  document.querySelector('[data-testid="tuw-insert-latex"]').click();
+  document.querySelector('[data-testid="toolbar-latex"]').click();
   await sleep(1500);
   const vistaPrevia = !!document.querySelector(
     '[data-testid="tuw-latex-preview"] img',

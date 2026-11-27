@@ -2,9 +2,8 @@ import { useExcalidrawAPI } from "@excalidraw/excalidraw";
 import { useEffect } from "react";
 
 import { appJotaiStore } from "../../app-jotai";
-import { isDesktop } from "../workspace/desktopApi";
 
-import { imageUrlDialogOpenAtom, latexDialogAtom } from "./contentState";
+import { latexDialogAtom } from "./contentState";
 import { readLatexData } from "./latex/latexSvg";
 
 import "./content.scss";
@@ -68,36 +67,6 @@ export const ContentBar = () => {
     return () => window.removeEventListener("dblclick", onDblClick, true);
   }, [api]);
 
-  if (!api) {
-    return null;
-  }
-
-  return (
-    <div
-      className="tuw-insert"
-      data-testid="tuw-insert"
-      role="toolbar"
-      aria-label="Insertar"
-    >
-      <span className="tuw-insert__title">Insertar</span>
-      <button
-        className="tuw-insert__btn"
-        data-testid="tuw-insert-latex"
-        title="Fórmula matemática (LaTeX). Doble clic sobre una fórmula para editarla"
-        onClick={() => appJotaiStore.set(latexDialogAtom, { mode: "new" })}
-      >
-        Fórmula
-      </button>
-      {isDesktop() && (
-        <button
-          className="tuw-insert__btn"
-          data-testid="tuw-insert-url"
-          title="Imagen desde una dirección web"
-          onClick={() => appJotaiStore.set(imageUrlDialogOpenAtom, true)}
-        >
-          Imagen URL
-        </button>
-      )}
-    </div>
-  );
+  // los botones "Fórmula" e "Imagen URL" están en la barra de funciones de arriba
+  return null;
 };

@@ -72,6 +72,8 @@ import {
   useLibraryItemSvg,
 } from "../../hooks/useLibraryItemSvg";
 
+import { getDefaultSidebarTab } from "../Sidebar/defaultTab";
+
 import * as defaultItems from "./defaultCommandPaletteItems";
 import "./CommandPalette.scss";
 
@@ -438,7 +440,7 @@ function CommandPaletteInner({
               setAppState({
                 openSidebar: {
                   name: DEFAULT_SIDEBAR.name,
-                  tab: DEFAULT_SIDEBAR.defaultTab,
+                  tab: getDefaultSidebarTab(),
                 },
               });
             }

@@ -1,0 +1,71 @@
+// Tamaño de la interfaz: solo menús y paneles (no la hoja).
+.excalidraw {
+  .App-menu_top__left,
+  .shapes-section,
+  .layer-ui__wrapper__top-right,
+  .layer-ui__wrapper__footer-left,
+  .layer-ui__wrapper__footer-right,
+  .default-sidebar,
+  .tuw-strokes,
+  .tuw-axis-panel {
+    zoom: var(--tuw-ui-scale, 1);
+  }
+}
+
+// Mientras se dibuja: solo queda la barra de funciones de arriba.
+body.tuw-ui-hidden .excalidraw {
+  .App-menu_top__left,
+  .layer-ui__wrapper__top-right,
+  .layer-ui__wrapper__footer,
+  .default-sidebar,
+  .tuw-strokes,
+  .tuw-axis-panel {
+    display: none !important;
+  }
+}
+
+.tuw-uiscale {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    input[type="range"] {
+      flex: 1;
+    }
+
+    input[type="number"] {
+      width: 64px;
+      padding: 4px;
+    }
+  }
+
+  &__presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+
+    button {
+      padding: 4px 10px;
+      border: 1px solid var(--default-border-color, #ccc);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text-primary-color);
+      cursor: pointer;
+
+      &.is-on {
+        border-color: var(--color-primary, #6965db);
+        background: var(--color-surface-primary-container, rgba(105, 101, 219, 0.12));
+      }
+    }
+  }
+}

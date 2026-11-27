@@ -1,10 +1,19 @@
-import { DefaultSidebar, Sidebar } from "@excalidraw/excalidraw";
+import {
+  DefaultSidebar,
+  Sidebar,
+  setDefaultSidebarTab,
+} from "@excalidraw/excalidraw";
 
 import { SheetExplorer } from "../tuw/explorer/SheetExplorer";
 import { SheetsTabIcon } from "../tuw/explorer/icons";
 import { isDesktop } from "../tuw/workspace/desktopApi";
 
 export const SHEETS_SIDEBAR_TAB = "sheets";
+
+// el botón del panel lateral abre primero "Hojas" (después Elementos)
+if (isDesktop()) {
+  setDefaultSidebarTab(SHEETS_SIDEBAR_TAB);
+}
 
 export const AppSidebar = () => {
   if (!isDesktop()) {

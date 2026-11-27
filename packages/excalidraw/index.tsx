@@ -496,6 +496,17 @@ export { LiveCollaborationTrigger };
 export { Stats } from "./components/Stats";
 
 export { DefaultSidebar } from "./components/DefaultSidebar";
+export {
+  registerToolbarItems,
+  getToolbarState,
+  getToolbarAssignments,
+  getHostToolbarItem,
+  findAssignment,
+  isNativeToolId,
+  subscribeToolbar,
+} from "./components/toolbarLayout";
+export type { HostToolbarItem } from "./components/toolbarLayout";
+export { setDefaultSidebarTab } from "./components/Sidebar/defaultTab";
 export { TTDDialog } from "./components/TTDDialog/TTDDialog";
 export { TTDDialogTrigger } from "./components/TTDDialog/TTDDialogTrigger";
 export {

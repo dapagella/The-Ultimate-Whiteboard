@@ -1,5 +1,13 @@
 # Cambios
 
+## 0.1.4
+
+- Barra de funciones personalizable: ejes 2D/3D, fórmula, imagen por URL y selección de lazo ya están arriba (se sacaron las barras de abajo). Clic derecho sobre un botón: quitarlo de la barra, moverlo, o asignarle un botón del lápiz/mouse. Lo que no está fijado queda en ⋮ (con 📌 para fijarlo). También se puede arrastrar para ordenar.
+- Un botón del lápiz (p. ej. de la Wacom) puede asignarse a cualquier función: con la manito sirve para moverte por la hoja mientras lo mantenés apretado.
+- Al empezar a dibujar se esconden los menús y queda solo la barra de arriba; al tocar un botón de la barra vuelven.
+- ☰ → «Tamaño de la interfaz…»: achica o agranda menús y paneles (50–150 %).
+- Panel lateral: abre en «Hojas»; el orden es búsqueda · hojas · elementos.
+
 ## 0.1.3
 
 - Eje 3D: la diagonal va fija a 225° (ya no hay control de ángulo).

@@ -77,7 +77,7 @@
   await sleep(300);
 
   // 3) eje 3D arrastrando
-  document.querySelector('[data-testid="tuw-axes-3d"]').click();
+  document.querySelector('[data-testid="toolbar-axes3d"]').click();
   await sleep(200);
   const ov = document.querySelector('[data-testid="tuw-axes-overlay"]');
   ov.dispatchEvent(pe("mouse", "pointerdown", 1003, 507));

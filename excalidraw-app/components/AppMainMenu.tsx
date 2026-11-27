@@ -17,6 +17,7 @@ import {
 } from "../tuw/content/contentState";
 import { SheetsTabIcon } from "../tuw/explorer/icons";
 import { exportDialogAtom } from "../tuw/export/exportState";
+import { uiScaleDialogAtom } from "../tuw/ui/uiState";
 import { penDialogOpenAtom } from "../tuw/pen/penState";
 import { isDesktop } from "../tuw/workspace/desktopApi";
 
@@ -76,6 +77,11 @@ export const AppMainMenu: React.FC<{
           Exportar imagen o PDF…
         </MainMenu.Item>
       )}
+      <MainMenu.Item
+        onSelect={() => appJotaiStore.set(uiScaleDialogAtom, true)}
+      >
+        Tamaño de la interfaz…
+      </MainMenu.Item>
       <MainMenu.Item
         onSelect={() => appJotaiStore.set(latexDialogAtom, { mode: "new" })}
       >

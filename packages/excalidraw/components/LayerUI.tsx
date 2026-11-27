@@ -49,6 +49,7 @@ import { useAppProps, useEditorInterface, useStylesPanelMode } from "./App";
 import { OverwriteConfirmDialog } from "./OverwriteConfirm/OverwriteConfirm";
 import { sidebarRightIcon } from "./icons";
 import { DefaultSidebar } from "./DefaultSidebar";
+import { getDefaultSidebarTab } from "./Sidebar/defaultTab";
 import { TTDDialog } from "./TTDDialog/TTDDialog";
 import { Stats } from "./Stats";
 import ElementLinkDialog from "./ElementLinkDialog";
@@ -516,7 +517,7 @@ const LayerUI = ({
                 );
               }
             }}
-            tab={DEFAULT_SIDEBAR.defaultTab}
+            tab={getDefaultSidebarTab()}
           />
         </>
       )}
