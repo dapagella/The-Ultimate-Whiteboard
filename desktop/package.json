@@ -1,6 +1,6 @@
 {
   "name": "tuw-desktop",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "private": true,
   "description": "The Ultimate Whiteboard — app de escritorio (Electron)",
   "author": "The Ultimate Whiteboard contributors",

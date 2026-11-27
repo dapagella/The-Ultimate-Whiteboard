@@ -1,5 +1,9 @@
 # Cambios
 
+## 0.1.7
+
+- Botón del lápiz asignado a una herramienta (p. ej. la manito): simplemente activa esa herramienta mientras lo mantenés apretado y al soltarlo vuelve a la anterior; sin movimientos propios ni eventos simulados.
+
 ## 0.1.6
 
 - El panel del costado es un poco más ancho para que entren los seis colores primarios y el color actual.
